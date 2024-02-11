@@ -283,11 +283,10 @@
                 </div>
             </section>
 <!------ Proof experiences -->
-            <!------ Proof experiences -->
 <section class="experience-section">
     <div class="experience-container">
         <div class="experience-scroll">
-            <div class="experience-item" onclick="expandBox('CanadaLife')">Canada Life | Aug 2023 — Present</div>
+            <div class="experience-item" onclick="toggleContent('CanadaLifeContent')">Canada Life | Aug 2023 — Present</div>
             <div id="CanadaLifeContent" class="hidden-content">
                 <p>Bilingual Client Benefit Specialist</p>
                 <ul>
@@ -299,7 +298,7 @@
             </div>
            
             <!-- Accenture Experience -->
-            <div class="experience-item" onclick="expandBox('Accenture')">Accenture | Jun 2023 — Aug 2023</div>
+            <div class="experience-item" onclick="toggleContent('AccentureContent')">Accenture | Jun 2023 — Aug 2023</div>
             <div id="AccentureContent" class="hidden-content">
                 <p>BOLD Student Mentorship Program</p>
                 <ul>
@@ -312,7 +311,7 @@
         
             
             <!-- MetaWorldX Experience -->
-            <div class="experience-item" onclick="expandBox('MetaWorldX')">MetaWorldX | Apr 2023 — Jun 2023</div>
+            <div class="experience-item" onclick="toggleContent('MetaWorldXContent')">MetaWorldX | Apr 2023 — Jun 2023</div>
             <div id="MetaWorldXContent" class="hidden-content">
                 <p>AWS Solutions Architect Intern</p>
                 <ul>
@@ -328,17 +327,12 @@
 </section>
 
 <script>
-    function expandBox(experienceName) {
-        const content = document.getElementById(`${experienceName}Content`);
-        content.classList.toggle('hidden-content');
-    }
-
     function toggleContent(contentId) {
         const content = document.getElementById(contentId);
         content.classList.toggle('hidden-content');
     }
-    
 </script>
+
 
 
             <!--=============== SERVICES ===============-->

@@ -471,6 +471,7 @@ body.light-theme {
   margin-bottom: 2rem;
 }
 
+
 /*=============== SKILLS ===============*/
 .skills__container {
   row-gap: 2rem;
@@ -522,6 +523,154 @@ body.light-theme {
 .skills__level {
   font-size: var(--tiny-font-size);
 }
+
+/* JD experience --------------------------------------- */ 
+
+/* Base styles */
+.experience-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
+
+.experience-scroll {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.experience-item {
+  display: inline-block;
+  padding: 1rem; /* Adjust padding for better touch experience on mobile */
+  margin: 0.5rem; /* Adjust margin for better spacing */
+  background-color: rgba(101, 101, 1, 0.5); /* Background color with transparency */
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.experience-item:hover {
+  background-color: rgba(101, 101, 1, 0.7); /* Hover background color with transparency */
+}
+
+.expanded-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--container-color);
+  width: 300px;
+  height: 200px;
+  border-radius: 1rem;
+  display: none;
+  z-index: 999;
+}
+
+.expanded-content {
+  padding: 1rem;
+}
+
+.experience-section {
+  margin-top: 3rem; /* Adjust the margin-top value as needed */
+}
+
+.experience-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem; /* Adjust as needed */
+}
+
+.experience-date {
+  /* Your styles for the date */
+}
+
+.services__button {
+  /* Your styles for the "see more" button */
+}
+
+.skills-section {
+  background-color: rgba(255, 255, 255, 0.5); /* Transparent white background */
+  padding: 2rem;
+}
+
+.skills-container {
+  max-width: 800px; /* Adjust as needed */
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+  color: #fff; /* Text color for the section header */
+}
+
+.experience-card {
+  background-color: rgba(255, 255, 255, 0.8); /* Card background color with transparency */
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.experience-item {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.hidden-content {
+  display: none;
+}
+
+.jobDescription {
+  color: var(--text-color); /* Use variable for text color */
+  margin-left: 1rem;
+  list-style: inside;
+}
+
+.jobDescription li {
+  margin-bottom: 10px;
+}
+
+.jobDescription strong {
+  color: var(--first-color); /* Use variable for strong tag color */
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .experience-item {
+    padding: 0.8rem; /* Adjust padding for smaller screens */
+    margin: 0.3rem; /* Adjust margin for smaller screens */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .experience-item {
+    padding: 0.6rem; /* Further adjust padding for even smaller screens */
+    margin: 0.2rem; /* Further adjust margin for even smaller screens */
+  }
+}
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .experience-item {
+    padding: 0.8rem; /* Adjust padding for smaller screens */
+    margin: 0.3rem; /* Adjust margin for smaller screens */
+  }
+  .experience-scroll {
+    white-space: normal; /* Allow items to stack vertically */
+    overflow-x: hidden; /* Hide horizontal overflow */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .experience-item {
+    padding: 0.6rem; /* Further adjust padding for even smaller screens */
+    margin: 0.2rem; /* Further adjust margin for even smaller screens */
+  }
+}
+
+/* End of JD experience --------------------------------------- */
+
+  
 
 /*=============== Experience ===============*/
 .experience {
@@ -1125,117 +1274,4 @@ body.light-theme {
     border-radius: .5rem;
   }
 
-  .experience-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-bottom: 3rem;
-  }
-  
-  .experience-scroll {
-    white-space: nowrap;
-    overflow-x: auto;
-  }
-  
-  .experience-item {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin-right: 1rem;
-    background-color: var(--container-color);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  
-  .experience-item:hover {
-    transform: translateY(-3px);
-  }
-  
-  .expanded-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--container-color);
-    width: 300px;
-    height: 200px;
-    border-radius: 1rem;
-    display: none;
-    z-index: 999;
-  }
-  
-  .expanded-content {
-    padding: 1rem;
-  }
-  
-  .experience-section {
-    margin-top: 3rem; /* Adjust the margin-top value as needed */
-  }
-  
-  .experience-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem; /* Adjust as needed */
-  }
-  
-  .experience-date {
-    /* Your styles for the date */
-  }
-  
-  .services__button {
-    /* Your styles for the "see more" button */
-  }
-  .experience-item {
-    padding: 1rem;
-    margin: 0.5rem;
-    background-color: rgba(101, 101, 1, 0.5); /* Background color with transparency */
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.experience-item:hover {
-    background-color: rgba(101, 101, 1, 0.7); /* Hover background color with transparency */
-}
-.skills-section {
-  background-color: rgba(255, 255, 255, 0.5); /* Transparent white background */
-  padding: 2rem;
-}
-
-.skills-container {
-  max-width: 800px; /* Adjust as needed */
-  margin: 0 auto;
-}
-
-.sectionHeader {
-  text-align: center;
-  color: #fff; /* Text color for the section header */
-}
-.experience-card {
-  background-color: rgba(255, 255, 255, 0.8); /* Card background color with transparency */
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
-
-.experience-item {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.hidden-content {
-  display: none;
-}
-
-.jobDescription {
-  list-style: none;
-  padding-left: 0;
-}
-
-.jobDescription li {
-  margin-bottom: 10px;
-}
-
-  
+   
