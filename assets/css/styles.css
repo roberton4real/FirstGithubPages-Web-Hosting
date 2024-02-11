@@ -173,7 +173,8 @@ body.light-theme {
 .light-theme .services__card,
 .light-theme .work__card,
 .light-theme .testimonial__card,
-.light-theme .contact__card {
+.light-theme .contact__card
+.experience-section {
   box-shadow: 0 2px 16px hsla(var(--second-hue), 48%, 8%, .1);
 }
 
@@ -595,7 +596,7 @@ body.light-theme {
   padding: 2rem;
 }
 
-.skills-container {
+.skills-container .experience-section{
   max-width: 800px; /* Adjust as needed */
   margin: 0 auto;
 }
