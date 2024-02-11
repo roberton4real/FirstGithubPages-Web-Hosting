@@ -337,20 +337,7 @@
         const content = document.getElementById(contentId);
         content.classList.toggle('hidden-content');
     }
-    // Function to expand/collapse the content when clicking on an experience item
-function toggleContent(experienceName) {
-    const content = document.getElementById(`${experienceName}Content`);
-    content.classList.toggle('hidden-content');
-}
-
-// Add event listeners to all experience items
-document.querySelectorAll('.experience-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const experienceName = item.getAttribute('data-experience');
-        toggleContent(experienceName);
-    });
-});
-
+    
 </script>
 
 
