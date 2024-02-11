@@ -523,6 +523,31 @@ body.light-theme {
   font-size: var(--tiny-font-size);
 }
 
+/*=============== Experience ===============*/
+.experience {
+  padding-top: 1rem;
+}
+
+.experience-list {
+  padding-top: 1rem;
+}
+
+.employerName {
+  color: var(--title-color);
+  font-weight: var(--font-semibold);
+}
+
+.jobDescription {
+  color: var(--text-color);
+  margin-left: 1rem;
+  list-style: inside;
+}
+
+.jobDescription strong {
+  color: var(--first-color);
+}
+
+
 /*=============== SERVICES ===============*/
 .services__container {
   grid-template-columns: repeat(2, 1fr);
@@ -1099,4 +1124,118 @@ body.light-theme {
     padding: .4rem;
     border-radius: .5rem;
   }
+
+  .experience-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 3rem;
+  }
+  
+  .experience-scroll {
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  
+  .experience-item {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    background-color: var(--container-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .experience-item:hover {
+    transform: translateY(-3px);
+  }
+  
+  .expanded-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--container-color);
+    width: 300px;
+    height: 200px;
+    border-radius: 1rem;
+    display: none;
+    z-index: 999;
+  }
+  
+  .expanded-content {
+    padding: 1rem;
+  }
+  
+  .experience-section {
+    margin-top: 3rem; /* Adjust the margin-top value as needed */
+  }
+  
+  .experience-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem; /* Adjust as needed */
+  }
+  
+  .experience-date {
+    /* Your styles for the date */
+  }
+  
+  .services__button {
+    /* Your styles for the "see more" button */
+  }
+  .experience-item {
+    padding: 1rem;
+    margin: 0.5rem;
+    background-color: rgba(101, 101, 1, 0.5); /* Background color with transparency */
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.experience-item:hover {
+    background-color: rgba(101, 101, 1, 0.7); /* Hover background color with transparency */
+}
+.skills-section {
+  background-color: rgba(255, 255, 255, 0.5); /* Transparent white background */
+  padding: 2rem;
+}
+
+.skills-container {
+  max-width: 800px; /* Adjust as needed */
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  text-align: center;
+  color: #fff; /* Text color for the section header */
+}
+.experience-card {
+  background-color: rgba(255, 255, 255, 0.8); /* Card background color with transparency */
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.experience-item {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.hidden-content {
+  display: none;
+}
+
+.jobDescription {
+  list-style: none;
+  padding-left: 0;
+}
+
+.jobDescription li {
+  margin-bottom: 10px;
+}
+
+  

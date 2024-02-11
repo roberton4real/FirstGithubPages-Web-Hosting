@@ -158,7 +158,7 @@
 
             <!--=============== SKILLS ===============-->
             <section class="skills section" id="skills">
-                <span class="section__subtitle">My abilities</span>
+                <span class="section__subtitle">Professional working experiences </span>
                 <h2 class="section__title">My Experience</h2>
 
                 <div class="skills__container container grid">
@@ -281,12 +281,83 @@
                         </div>
                     </div>
                 </div>
-                                     
+            </section>
+<!------ Proof experiences -->
+            <!------ Proof experiences -->
+<section class="experience-section">
+    <div class="experience-container">
+        <div class="experience-scroll">
+            <div class="experience-item" onclick="expandBox('CanadaLife')">Canada Life | Aug 2023 — Present</div>
+            <div id="CanadaLifeContent" class="hidden-content">
+                <p>Bilingual Client Benefit Specialist</p>
+                <ul>
+                    <li class="jobDescription">Spearheaded team, ensured 100% adherence to SLAs, achieved 20% efficiency boost.</li>
+                    <li class="jobDescription">Managed 20 client accounts, reduced re-enrollment errors by 30% for 5,000+ employees.</li>
+                    <li class="jobDescription">Resolved complex issues, decreased support ticket resolution time by 25%.</li>
+                    <li class="jobDescription"><strong>Tech Stack:</strong> Cisco, SalesForce, SharePoint, GroupNet Flex, ServiceNow, JIRA, VPN, Ben Mainframe</li>
+                </ul>
+            </div>
+           
+            <!-- Accenture Experience -->
+            <div class="experience-item" onclick="expandBox('Accenture')">Accenture | Jun 2023 — Aug 2023</div>
+            <div id="AccentureContent" class="hidden-content">
+                <p>BOLD Student Mentorship Program</p>
+                <ul>
+                    <li class="jobDescription">Participated in consulting workshops, enhanced problem-solving proficiency.</li>
+                    <li class="jobDescription">Acquired practical knowledge through interactive sessions and case studies.</li>
+                    <li class="jobDescription">Developed strategies to tackle diverse business problems.</li>
+                    <li class="jobDescription"><strong>Tech Stack:</strong> JIRA, ServiceNow, Confluence, Trello, Slack</li>
+                </ul>
+            </div>
+        
+            
+            <!-- MetaWorldX Experience -->
+            <div class="experience-item" onclick="expandBox('MetaWorldX')">MetaWorldX | Apr 2023 — Jun 2023</div>
+            <div id="MetaWorldXContent" class="hidden-content">
+                <p>AWS Solutions Architect Intern</p>
+                <ul>
+                    <li class="jobDescription">Collaborated on AWS solutions, achieved 10% scalability increase.</li>
+                    <li class="jobDescription">Supported implementation, reduced deployment time by 15%, improved reliability by 20%.</li>
+                    <li class="jobDescription">Provided technical support, resolved 10 issues/week, decreased downtime by 25%.</li>
+                    <li class="jobDescription"><strong>Tech Stack:</strong> Jenkins, Kubernetes, Docker, Terraform, Ansible, Git, Prometheus, Grafana, AWS DevOps</li>
+                </ul>
+            </div>
+           
+        </div>
+    </div>
+</section>
+
+<script>
+    function expandBox(experienceName) {
+        const content = document.getElementById(`${experienceName}Content`);
+        content.classList.toggle('hidden-content');
+    }
+
+    function toggleContent(contentId) {
+        const content = document.getElementById(contentId);
+        content.classList.toggle('hidden-content');
+    }
+    // Function to expand/collapse the content when clicking on an experience item
+function toggleContent(experienceName) {
+    const content = document.getElementById(`${experienceName}Content`);
+    content.classList.toggle('hidden-content');
+}
+
+// Add event listeners to all experience items
+document.querySelectorAll('.experience-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const experienceName = item.getAttribute('data-experience');
+        toggleContent(experienceName);
+    });
+});
+
+</script>
+
 
             <!--=============== SERVICES ===============-->
             <section class="services section">
-                <span class="section__subtitle">My Services</span>
-                <h2 class="section__title">What I Offer</h2>
+                <span class="section__subtitle">Technical Skills</span>
+                <h2 class="section__title">Skills</h2>
 
                 <div class="services__container container grid">
                     <div class="services__card">
