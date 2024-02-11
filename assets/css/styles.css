@@ -83,7 +83,7 @@ textarea {
 body {
   background-color: var(--body-color);
   color: var(--text-color);
-  transition: .4s; /* for light mode animation */
+  transition: .1s; /* for light mode animation */
 }
 
 h1, h2, h3 {
@@ -235,7 +235,7 @@ body.light-theme {
   width: 100%;
   background-color: var(--body-color);
   z-index: var(--z-fixed);
-  transition: .4s; /* for light mode animation */
+  transition: .2s; /* for light mode animation */
 }
 
 .nav {
@@ -263,7 +263,7 @@ body.light-theme {
   border-radius: 4rem;
   padding: 1rem 2.25rem;
   backdrop-filter: blur(10px);
-  transition: .4s; /* for light mode animation */
+  transition: .2s; /* for light mode animation */
 }
 
 .nav__list {
@@ -370,7 +370,7 @@ body.light-theme {
   border-radius: .25rem;
   display: flex;
   font-size: 1rem;
-  transition: .4s;
+  transition: .2s;
 }
 
 .home__social-link:hover {
@@ -412,7 +412,7 @@ body.light-theme {
   padding: .75rem 1rem;
   border-radius: .5rem;
   font-weight: var(--font-medium);
-  transition: .4s;
+  transition: .2s;
 }
 
 .button:hover {
@@ -731,7 +731,7 @@ body.light-theme {
 
 .services__icon {
   font-size: 1rem;
-  transition: .4s;
+  transition: .2s;
 }
 
 .services__modal {
@@ -743,7 +743,7 @@ body.light-theme {
   place-items: center;
   visibility: hidden;
   opacity: 0;
-  transition: .4s;
+  transition: .2s;
   z-index: var(--z-modal);
 }
 
@@ -858,7 +858,7 @@ body.light-theme {
 
 .work__icon {
   font-size: 1rem;
-  transition: .4s;
+  transition: .2s;
 }
 
 /* Active item work*/
@@ -959,7 +959,7 @@ body.light-theme {
 
 .contact__button-icon {
   font-size: 1rem;
-  transition: .4s;
+  transition: .2s;
 }
 
 .contact__form-div {
