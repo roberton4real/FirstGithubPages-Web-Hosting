@@ -398,8 +398,6 @@
         margin: 20px 0;
     }
 </style>
-
-
             <!--=============== SERVICES ===============-->
             <section class="services section" style="padding-top: 0px;">
                 <span class="section__subtitle" style="padding-top: 40px;">Technical Skills</span>
@@ -693,75 +691,72 @@
                 </div>
             </section>
 
-            <!--=============== CONTACT ===============-->
-            <section class="contact section" id="contact">
-                <span class="section__subtitle">Get in touch</span>
-                <h2 class="section__title">Contact Me</h2>
+    <!--=============== CONTACT ===============-->
+<section class="contact section" id="contact">
+    <span class="section__subtitle">Get in touch</span>
+    <h2 class="section__title">Contact Me</h2>
 
-                <div class="contact__container container grid">
-                    <div class="contact__content">
-                        <h3 class="contact__title">Talk to me</h3>
+    <div class="contact__container container grid">
+        <!-- Contact Options -->
+        <div class="contact__content">
+            <h3 class="contact__title">Talk to me</h3>
 
-                        <div class="contact__info">
-                            <div class="contact__card">
-                                <i class='bx bx-mail-send contact__card-icon'></i>
-                                <h3 class="contact__card-title">Email</h3>
-                                <span class="contact__card-data">johnroberton14@gmail.com</span>
-
-                                <!-- Insert your original email -->
-                                <a href="mailto:examplemail@correo.com" target="_blank" class="contact__button">
-                                    Write Me <i class='bx bx-right-arrow-alt contact__button-icon'></i>
-                                </a>
-                            </div>
-
-                            <div class="contact__card">
-                                <i class='bx bx-envelope contact__card-icon'></i>
-                                <h3 class="contact__card-title">Newsletter</h3>
-                                <span class="contact__card-data">Let's Talk On NJHD</span>
-
-                                <!-- Insert a real number plus country code -->
-                                <a href="https://njhd.substack.com/?utm_source=substack&utm_medium=web&utm_campaign=substack_profile" target="_blank" class="contact__button">
-                                    Read More <i class='bx bx-right-arrow-alt contact__button-icon'></i>
-                                </a>
-                            </div>
-
-                            <div class="contact__card">
-                                <i class='bx bxl-linkedin contact__card-icon' ></i>
-                                <h3 class="contact__card-title">linkedin</h3>
-                                <span class="contact__card-data">NewJohnRefuse</span>
-
-                                <!-- Insert your brand name or profile -->
-                                <a href="https://www.linkedin.com/in/newjohnrefuse/" target="_blank" class="contact__button">
-                                    Interact With Me <i class='bx bx-right-arrow-alt contact__button-icon'></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="contact__content">
-                        <h3 class="contact__title">Write me your project</h3>
-
-                        <form action="" class="contact__form">
-                            <div class="contact__form-div">
-                                <label class="contact__form-tag">Names</label>
-                                <input type="text" placeholder="Insert your name" class="contact__form-input">
-                            </div>
-
-                            <div class="contact__form-div">
-                                <label class="contact__form-tag">Mail</label>
-                                <input type="email" placeholder="Insert your email" class="contact__form-input">
-                            </div>
-
-                            <div class="contact__form-div contact__form-area">
-                                <label class="contact__form-tag">Project</label>
-                                <textarea name="" id="" cols="30" rows="10" placeholder="Write your project" class="contact__form-input"></textarea>
-                            </div>
-
-                            <button class="button">Send Message</button>
-                        </form>
-                    </div>
+            <div class="contact__info">
+                <div class="contact__card">
+                    <i class='bx bx-mail-send contact__card-icon'></i>
+                    <h3 class="contact__card-title">Email</h3>
+                    <span class="contact__card-data">johnroberton14@gmail.com</span>
+                    <a href="mailto:johnroberton14@gmail.com" class="contact__button">
+                        Write Me <i class='bx bx-right-arrow-alt contact__button-icon'></i>
+                    </a>
                 </div>
-            </section>
+
+                <div class="contact__card">
+                    <i class='bx bx-envelope contact__card-icon'></i>
+                    <h3 class="contact__card-title">Newsletter</h3>
+                    <span class="contact__card-data">Let's Talk On NJHD</span>
+                    <a href="https://njhd.substack.com/?utm_source=substack&utm_medium=web&utm_campaign=substack_profile" target="_blank" class="contact__button">
+                        Read More <i class='bx bx-right-arrow-alt contact__button-icon'></i>
+                    </a>
+                </div>
+
+                <div class="contact__card">
+                    <i class='bx bxl-linkedin contact__card-icon'></i>
+                    <h3 class="contact__card-title">LinkedIn</h3>
+                    <span class="contact__card-data">NewJohnRefuse</span>
+                    <a href="https://www.linkedin.com/in/newjohnrefuse/" target="_blank" class="contact__button">
+                        Interact With Me <i class='bx bx-right-arrow-alt contact__button-icon'></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Form -->
+        <div class="contact__content">
+            <h3 class="contact__title">Write me your project</h3>
+
+            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST" class="contact__form">
+                <div class="contact__form-div">
+                    <input type="text" name="name" required class="contact__form-input" placeholder=" " />
+                    <label class="contact__form-tag">Name</label>
+                </div>
+
+                <div class="contact__form-div">
+                    <input type="email" name="email" required class="contact__form-input" placeholder=" " />
+                    <label class="contact__form-tag">Email</label>
+                </div>
+
+                <div class="contact__form-div contact__form-area">
+                    <textarea name="message" required class="contact__form-input" placeholder=" "></textarea>
+                    <label class="contact__form-tag">Project</label>
+                </div>
+
+                <button type="submit" class="button">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
         <!--=============== FOOTER ===============-->
         <footer class="footer">
             <div class="footer__container container">
