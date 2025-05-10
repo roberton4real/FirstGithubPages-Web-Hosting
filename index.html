@@ -576,81 +576,166 @@
                     </div>
                 </div>
             </section>
-
-            <!--=============== WORK ===============-->
-            <section class="work section" id="work">
-                <span class="section__subtitle">My Portfolio</span>
-                <h2 class="section__title">Recent Works</h2>
-
-                <div class="work__filters">
-                    <span class="work__item active-work" data-filter='all'>All</span>
-                    <span class="work__item" data-filter='.web'>Web</span>
-                    <span class="work__item" data-filter='.movil'>IAC</span>
-                    <span class="work__item" data-filter='.design'>CI/CD</span>
-                </div>
-
-                <div class="work__container container grid">
-                    <div class="work__card mix web">
-                        <!-- Insert your image in a rectangular format (Ex: 600 x 400, 1000 x 800, 1200 x 1000, etc) -->
-                        <img src="https://images.unsplash.com/photo-1487014679447-9f8336841d58?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2505&q=80" alt="" class="work__img">
-
-                        <h3 class="work__title">Responsive Portfolio</h3>
-                        
-                        <a href="https://open.substack.com/pub/njhd/p/my-responsive-portfolio?r=1n9gtg&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true" target="_self" class="work__button">
-                            Demo <i class='bx bx-right-arrow-alt work__icon' ></i>
-                        </a>
-                    </div>
-
-                    <div class="work__card mix movil">
-                        <img src="https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="" class="work__img">
-
-                        <h3 class="work__title">Terraform Automation</h3>
-
-
-                        <a class="_self work__button project-link" href="https://njhd.substack.com/p/project-x-use-terraform-to-configure?utm_source=profile&utm_medium=reader2">
-                            Read <i class='bx bx-right-arrow-alt work__icon'></i>
-                        </a>
-                        
-                        
-                        <a class="_self work__button project-link" href="https://njhd.substack.com/p/project-x-continuous-integration?utm_source=profile&utm_medium=reader2">
-                            Read <i class='bx bx-right-arrow-alt work__icon'></i>
-                        </a>
-                        
-                        
-                    </div>
-
-                    <div class="work__card mix design">
-                        <img src="https://images.unsplash.com/photo-1505682634904-d7c8d95cdc50?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="" class="work__img">
-
-                        <h3 class="work__title"> In progress</h3>
-                        
-                        <a href="" class="work__button">
-                            Demo in progess... <i class='bx bx-right-arrow-alt work__icon' ></i>
-                        </a>
-                    </div>
-
-                    <div class="work__card mix web">
-                        <img src="https://images.unsplash.com/photo-1614312385003-dcea7b8b6ab6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1626&q=80" alt="" class="work__img">
-
-                        <h3 class="work__title">In progress</h3>
-                        
-                        <a href="https://open.substack.com/pub/njhd/p/shaping-the-future-of-the-metaverse?r=1n9gtg&utm_campaign=post&utm_medium=web" class="work__button">
-                            Demo in progess... <i class='bx bx-right-arrow-alt work__icon' ></i>
-                        </a>
-                    </div>
-                    <div class="work__card mix movil">
-                        <img src="https://images.unsplash.com/photo-1579719558505-ad4a5fee0847?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2448&q=80" alt="" class="work__img">
-                        <h3 class="work__title">CloudFormation Dashboard</h3>
-                        <a href="https://myaec-my.sharepoint.com/:p:/g/personal/njrefuse_myaec_live/EeawuJ_LjJhNjoCkxvQFjRYBaxuHqNCwXMZnLSnlte-0WA?e=Yt4ucK" target="_blank" class="work__button">
-                            Presentation <i class='bx bx-right-arrow-alt work__icon'></i>
-                        </a>
-                    </div>
-                    
-                    
-                    </div>
-                </div>
-            </section>
-
+<!--=============== WORK ===============-->
+<section class="work section" id="work">
+    <span class="section__subtitle">My Portfolio</span>
+    <h2 class="section__title">Recent Works</h2>
+  
+    <div class="work__filters">
+      <span class="work__item active-work" data-filter="all">All</span>
+      <span class="work__item" data-filter=".cloud">Cloud</span>
+      <span class="work__item" data-filter=".movil">IAC</span>
+      <span class="work__item" data-filter=".design">CI/CD</span>
+    </div>
+  
+    <div class="work__container container grid">
+      <!-- Azure Policy Library -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://learn.microsoft.com/en-us/media/logos/logo-ms-social.svg"
+          alt="Azure Policy Library"
+          class="work__img"
+        />
+        <h3 class="work__title">Azure Policy Library</h3>
+        <a
+          href="https://github.com/roberton4real/azure-policy-library"
+          class="work__button"
+          target="_blank"
+        >
+          View on GitHub
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- KQL Workbook Monitoring -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Azure_logo.svg/2560px-Azure_logo.svg.png"
+          alt="KQL Workbook Monitoring"
+          class="work__img"
+        />
+        <h3 class="work__title">KQL Workbook Monitoring</h3>
+        <a
+          href="https://github.com/roberton4real/kql-workbooks"
+          class="work__button"
+          target="_blank"
+        >
+          View on GitHub
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- SQL LRS Backup Migration -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"
+          alt="SQL LRS Backup Migration"
+          class="work__img"
+        />
+        <h3 class="work__title">SQL LRS Backup Migration</h3>
+        <a
+          href="https://www.notion.so/SQL-Databases-To-Change-to-LRS-Backups-task-with-live-of-document-update-1a1af16116ee803d8e72e20f952357a7?pvs=21"
+          class="work__button"
+          target="_blank"
+        >
+          View Details
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- Enable AHUB for VMs -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://images.unsplash.com/photo-1581090700227-2c0b1d3cab5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"
+          alt="Enable AHUB for VMs"
+          class="work__img"
+        />
+        <h3 class="work__title">Enable AHUB for VMs</h3>
+        <a
+          href="#"
+          onclick="window.open('https://portal.azure.com','_blank')"
+          class="work__button"
+        >
+          Open Guide
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- Storage Account Owner Check -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://docs.microsoft.com/cli/azure/media/azure-cli-logo.png"
+          alt="Storage Account Owner Check"
+          class="work__img"
+        />
+        <h3 class="work__title">Storage Account Owner Check</h3>
+        <a
+          href="https://docs.microsoft.com/cli/azure/role/assignment?view=azure-cli-latest#az-role-assignment-list"
+          class="work__button"
+          target="_blank"
+        >
+          View CLI Docs
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- Change Backup Storage Redundancy to LRS -->
+      <div class="work__card mix cloud">
+        <img
+          src="https://images.unsplash.com/photo-1618231075702-e67db7bec604?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60"
+          alt="Change Backup Storage Redundancy"
+          class="work__img"
+        />
+        <h3 class="work__title">Change Backup Storage Redundancy to LRS</h3>
+        <a
+          href="https://www.notion.so/kb-sql-databases-not-using-lrs-1-1c7af16116ee8043ad40c6faa613076e?pvs=21"
+          class="work__button"
+          target="_blank"
+        >
+          View Task Details
+          <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- Terraform Automation (IAC) -->
+      <div class="work__card mix movil">
+        <img
+          src="https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+          alt="Terraform Automation"
+          class="work__img"
+        />
+        <h3 class="work__title">Terraform Automation</h3>
+        <a
+          href="https://njhd.substack.com/p/project-x-use-terraform-to-configure"
+          class="work__button"
+          target="_blank"
+        >
+          Read <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+        <a
+          href="https://njhd.substack.com/p/project-x-continuous-integration"
+          class="work__button"
+          target="_blank"
+        >
+          Read <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+  
+      <!-- CI/CD placeholder (existing) -->
+      <div class="work__card mix design">
+        <img
+          src="https://images.unsplash.com/photo-1505682634904-d7c8d95cdc50?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+          alt="In progress"
+          class="work__img"
+        />
+        <h3 class="work__title">In progress</h3>
+        <a href="#" class="work__button">
+          Demo in progress… <i class="bx bx-right-arrow-alt work__icon"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+  
             <!--=============== TESTIMONIALS ===============-->
             <section class="testimonial section">
                 <span class="section__subtitle">Partipation</span>
@@ -691,7 +776,7 @@
                 </div>
             </section>
 
-    <!--=============== CONTACT ===============-->
+  <!--=============== CONTACT ===============-->
 <section class="contact section" id="contact">
     <span class="section__subtitle">Get in touch</span>
     <h2 class="section__title">Contact Me</h2>
@@ -735,7 +820,7 @@
         <div class="contact__content">
             <h3 class="contact__title">Write me your project</h3>
 
-            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST" class="contact__form">
+            <form action="https://formspree.io/f/mgvkzerq" method="POST" class="contact__form">
                 <div class="contact__form-div">
                     <input type="text" name="name" required class="contact__form-input" placeholder=" " />
                     <label class="contact__form-tag">Name</label>
@@ -756,6 +841,7 @@
         </div>
     </div>
 </section>
+
 
         <!--=============== FOOTER ===============-->
         <footer class="footer">
