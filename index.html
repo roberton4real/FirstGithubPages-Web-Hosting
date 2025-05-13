@@ -387,7 +387,7 @@
           </div>
           <h3 class="services__card-title">Cloud Engineering</h3>
           <p class="services__card-desc">
-            Design, optimize, and secure AWS & Azure environments end-to-end.
+            Design, optimize, and secure AWS &amp; Azure environments end-to-end.
           </p>
           <button class="services__btn" data-modal="modal-2">
             Learn More <i class="bx bx-right-arrow-alt"></i>
@@ -399,7 +399,7 @@
           <div class="services__icon-wrapper">
             <i class="bx bx-dev-service services__icon-big"></i>
           </div>
-          <h3 class="services__card-title">DevOps & CI/CD</h3>
+          <h3 class="services__card-title">DevOps &amp; CI/CD</h3>
           <p class="services__card-desc">
             Build and maintain automated pipelines for seamless delivery.
           </p>
@@ -410,42 +410,44 @@
       </div>
     </div>
   
-    <!-- Modals (unchanged) -->
+    <!-- Modal 1 -->
     <div id="modal-1" class="services__modal">
       <div class="services__modal-content">
         <i class="bx bx-x services__modal-close"></i>
         <h3 class="services__modal-title">Infrastructure Automation</h3>
         <ul class="services__modal-list">
-          <li><i class="bx bx-check"></i> Terraform & Ansible provisioning</li>
+          <li><i class="bx bx-check"></i> Terraform &amp; Ansible provisioning</li>
           <li><i class="bx bx-check"></i> Automated configuration drift remediation</li>
           <li><i class="bx bx-check"></i> CI-driven pipeline triggers</li>
-          <li><i class="bx bx-check"></i> Compliance auditing & reporting</li>
+          <li><i class="bx bx-check"></i> Compliance auditing &amp; reporting</li>
         </ul>
       </div>
     </div>
   
+    <!-- Modal 2 -->
     <div id="modal-2" class="services__modal">
       <div class="services__modal-content">
         <i class="bx bx-x services__modal-close"></i>
         <h3 class="services__modal-title">Cloud Engineering</h3>
         <ul class="services__modal-list">
-          <li><i class="bx bx-check"></i> VPC, Subnet & Security Group design</li>
-          <li><i class="bx bx-check"></i> IAM policies & RBAC enforcement</li>
-          <li><i class="bx bx-check"></i> Auto-scaling & cost optimization</li>
+          <li><i class="bx bx-check"></i> VPC, Subnet &amp; Security Group design</li>
+          <li><i class="bx bx-check"></i> IAM policies &amp; RBAC enforcement</li>
+          <li><i class="bx bx-check"></i> Auto-scaling &amp; cost optimization</li>
           <li><i class="bx bx-check"></i> Monitoring with CloudWatch / Azure Monitor</li>
         </ul>
       </div>
     </div>
   
+    <!-- Modal 3 -->
     <div id="modal-3" class="services__modal">
       <div class="services__modal-content">
         <i class="bx bx-x services__modal-close"></i>
-        <h3 class="services__modal-title">DevOps & CI/CD</h3>
+        <h3 class="services__modal-title">DevOps &amp; CI/CD</h3>
         <ul class="services__modal-list">
           <li><i class="bx bx-check"></i> Jenkins, GitHub Actions, Azure Pipelines</li>
-          <li><i class="bx bx-check"></i> Docker & Kubernetes deployments</li>
-          <li><i class="bx bx-check"></i> Blue/Green & Canary release strategies</li>
-          <li><i class="bx bx-check"></i> Automated testing & code quality gates</li>
+          <li><i class="bx bx-check"></i> Docker &amp; Kubernetes deployments</li>
+          <li><i class="bx bx-check"></i> Blue/Green &amp; Canary release strategies</li>
+          <li><i class="bx bx-check"></i> Automated testing &amp; code quality gates</li>
         </ul>
       </div>
     </div>
@@ -453,19 +455,30 @@
   
   <!-- ========== STYLES ========== -->
   <style>
-    /* Section background now uses your exact page bg */
+    /* Section wrapper */
     .services {
       padding: 5rem 2rem;
       background-color: var(--body-color);
     }
+    .services .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
   
-    /* Cards use the container shade */
+    /* Grid of cards */
+    .services__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+  
+    /* Individual card */
     .services__card {
       background-color: var(--container-color);
+      color: var(--text-color);
       border-radius: 12px;
       padding: 2rem 1.5rem;
       text-align: center;
-      position: relative;
       transition: transform .3s ease, box-shadow .3s ease;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
@@ -474,12 +487,7 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
   
-    /* rest of your existing services CSS stays the same */
-    .services__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
+    /* Icon wrapper */
     .services__icon-wrapper {
       width: 60px;
       height: 60px;
@@ -490,42 +498,115 @@
       align-items: center;
       justify-content: center;
     }
-    .services__icon-big { color: #fff; font-size: 1.8rem; }
+    .services__icon-big {
+      color: #fff;
+      font-size: 1.8rem;
+    }
   
+    /* Title & description */
     .services__card-title {
-      color: #fff; font-size: 1.25rem; margin-bottom: .75rem;
+      color: var(--title-color);
+      font-size: 1.25rem;
+      margin-bottom: .75rem;
     }
     .services__card-desc {
-      color: #ccc; font-size: .95rem; margin-bottom: 1.5rem; line-height: 1.4;
+      color: var(--text-color-light);
+      font-size: .95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
     }
+  
+    /* Button */
     .services__btn {
       background: none;
-      border: 2px solid #6c63ff;
-      color: #6c63ff;
+      border: 2px solid var(--first-color);
+      color: var(--first-color);
       padding: .5rem 1rem;
       border-radius: 50px;
       font-size: .9rem;
       cursor: pointer;
       transition: background .3s ease, color .3s ease;
     }
-    .services__btn i { margin-left: .4rem; }
+    .services__btn i {
+      margin-left: .4rem;
+    }
     .services__btn:hover {
-      background: #6c63ff; color: #fff;
+      background: var(--first-color);
+      color: var(--body-color);
     }
   
-    /* Modals & JS (unchanged) */
-    .services__modal { /* … */ }
-    .services__modal.open { /* … */ }
-    .services__modal-content { /* … */ }
-    .services__modal-close { /* … */ }
-    /* etc… */
+    /* Modal backdrop */
+    .services__modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: hsla(var(--second-hue),32%,12%,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: var(--z-modal);
+    }
+    .services__modal.open {
+      display: flex;
+    }
+  
+    /* Modal content */
+    .services__modal-content {
+      background-color: var(--container-color);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      animation: modalFadeIn 0.4s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  
+    .services__modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: var(--title-color);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+  
+    .services__modal-title {
+      color: var(--first-color);
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+  
+    .services__modal-list {
+      list-style: none;
+      padding: 0; margin: 0;
+    }
+    .services__modal-list li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: .75rem;
+      color: var(--text-color);
+      font-size: .95rem;
+    }
+    .services__modal-list li i {
+      color: var(--first-color);
+      margin-right: .6rem;
+      font-size: 1.1rem;
+      margin-top: .1rem;
+    }
   </style>
   
   <!-- ========== JS to open/close modals ========== -->
   <script>
     document.querySelectorAll('.services__btn').forEach(btn =>
       btn.addEventListener('click', e => {
-        document.getElementById(e.currentTarget.dataset.modal).classList.add('open');
+        const modal = document.getElementById(e.currentTarget.dataset.modal);
+        modal.classList.add('open');
       })
     );
     document.querySelectorAll('.services__modal-close').forEach(close =>
