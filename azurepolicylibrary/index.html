@@ -2,14 +2,413 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Azure Policy Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Policy Library – New John Refuse</title>
   <link rel="stylesheet" href="../css/styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #0e1117;
+      color: #e6edf3;
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 1rem 2rem;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #8b949e;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #58a6ff;
+    }
+
+    .code-block {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      color: #e6edf3;
+    }
+
+    .external-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #58a6ff;
+      text-decoration: none;
+      border-bottom: 1px dashed #58a6ff;
+    }
+
+    .external-link:hover {
+      color: #1f6feb;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      color: #8b949e;
+      border-top: 1px solid #30363d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #30363d;
+    }
+
+    th {
+      background: #21262d;
+      color: #58a6ff;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  </style>
 </head>
 <body>
-  <main style="padding: 4rem 2rem; text-align: center;">
+  <header>
     <h1>Azure Policy Library</h1>
-    <p>This is where I share Azure Policies I've built for enforcing cloud standards.</p>
-    <a href="https://github.com/roberton4real/azure-policy-library" target="_blank">📂 View on GitHub</a>
+    <p>Curated policies, automation snippets, and architecture insights by New John Refuse</p>
+  </header>
+
+  <main class="content">
+    <section>
+      <h2>💡 What This Is</h2>
+      <p>A centralized hub of Azure governance knowledge. Explore policies, code snippets, and cloud standards—all handcrafted for clarity, reuse, and automation.</p>
+    </section>
+
+    <section>
+      <h2>🔐 Policy: Enforce Azure Resource Naming Conventions</h2>
+      <p>This Azure Policy enforces naming conventions for specific Azure resource types to ensure consistency across environments (sbx, dev, stg, prd). It denies the creation of resources that do not follow the defined naming patterns, which include a prefix (<code>njrsbx-*</code>) and specific suffixes based on the resource type.</p>
+      <div class="code-block">
+        <pre><code class="json">{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "anyOf": [
+            {"field": "type", "equals": "Microsoft.Sql/servers"},
+            {"field": "type", "equals": "Microsoft.Sql/servers/databases"},
+            {"field": "type", "equals": "Microsoft.DocumentDB/databaseAccounts"},
+            {"field": "type", "equals": "Microsoft.Batch/batchAccounts"},
+            {"field": "type", "equals": "Microsoft.DataFactory/factories"},
+            {"field": "type", "equals": "Microsoft.ServiceBus/namespaces"},
+            {"field": "type", "equals": "Microsoft.Cache/redis"},
+            {"field": "type", "equals": "Microsoft.Compute/availabilitySets"},
+            {"field": "type", "equals": "Microsoft.Logic/workflows"},
+            {"field": "type", "equals": "Microsoft.Scheduler/jobCollections"},
+            {"field": "type", "equals": "Microsoft.Insights/components"},
+            {"field": "type", "equals": "Microsoft.KeyVault/vaults"},
+            {"field": "type", "equals": "Microsoft.RecoveryServices/vaults"},
+            {"field": "type", "equals": "Microsoft.SiteRecovery/siteRecovery"},
+            {"field": "type", "equals": "Microsoft.EventHub/namespaces"},
+            {"field": "type", "equals": "Microsoft.Network/applicationGateways"}
+          ]
+        },
+        {
+          "not": {
+            "allOf": [
+              {"field": "name", "like": "njrsbx-*"},
+              {
+                "anyOf": [
+                  {"field": "name", "like": "*-bs"},
+                  {"field": "name", "like": "*-sql"},
+                  {"field": "name", "like": "*-db"},
+                  {"field": "name", "like": "*-df"},
+                  {"field": "name", "like": "*-ddb"},
+                  {"field": "name", "like": "*-sb"},
+                  {"field": "name", "like": "*-rc"},
+                  {"field": "name", "like": "*-as"},
+                  {"field": "name", "like": "*-la"},
+                  {"field": "name", "like": "*-sch"},
+                  {"field": "name", "like": "*-ai"},
+                  {"field": "name", "like": "*-kv"},
+                  {"field": "name", "like": "*-rsv"},
+                  {"field": "name", "like": "*-sr"},
+                  {"field": "name", "like": "*-eh"},
+                  {"field": "name", "like": "*-agw"}
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "allOf": [
+                      {"value": "[parameters('environment')]", "equals": "sbx"},
+                      {"field": "name", "like": "njrsbx-sbx-*"}
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {"value": "[parameters('environment')]", "equals": "dev"},
+                      {
+                        "anyOf": [
+                          {"field": "name", "like": "njrsbx-dev-*"},
+                          {"field": "name", "like": "njrsbx-tst-*"},
+                          {"field": "name", "like": "njrsbx-migt-*"}
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {"value": "[parameters('environment')]", "equals": "stg"},
+                      {
+                        "anyOf": [
+                          {"field": "name", "like": "njrsbx-stg-*"},
+                          {"field": "name", "like": "njrsbx-uat-*"},
+                          {"field": "name", "like": "njrsbx-qa-*"}
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {"value": "[parameters('environment')]", "equals": "prd"},
+                      {"field": "name", "like": "njrsbx-prd-*"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {
+    "environment": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Environment",
+        "description": "The deployment environment (sbx/dev/stg/prd)"
+      },
+      "allowedValues": ["sbx", "dev", "stg", "prd"],
+      "defaultValue": "sbx"
+    }
+  }
+}</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>📘 KB: Naming Conventions for Azure Resources</h2>
+      <p>The policy enforces the following naming conventions for key resource types:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Resource Type</th>
+            <th>Azure Resource Type</th>
+            <th>Naming Prefix</th>
+            <th>Naming Suffix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Storage Accounts</td>
+            <td><code>Microsoft.Storage/storageAccounts</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-bak</code></td>
+          </tr>
+          <tr>
+            <td>Storage Containers</td>
+            <td><code>Microsoft.Storage/storageAccounts/blobServices/containers</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-bak</code></td>
+          </tr>
+          <tr>
+            <td>Table Storage (NoSQL)</td>
+            <td><code>Microsoft.Storage/storageAccounts/tableServices</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-tbl</code></td>
+          </tr>
+          <tr>
+            <td>SQL Servers</td>
+            <td><code>Microsoft.Sql/servers</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-sql</code></td>
+          </tr>
+          <tr>
+            <td>SQL Databases</td>
+            <td><code>Microsoft.Sql/servers/databases</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-db</code></td>
+          </tr>
+          <tr>
+            <td>SQL Managed Instances</td>
+            <td><code>Microsoft.Sql/managedInstances</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-sqlmi</code></td>
+          </tr>
+          <tr>
+            <td>SQL MI Databases</td>
+            <td><code>Microsoft.Sql/managedInstances/databases</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-dbmi</code></td>
+          </tr>
+          <tr>
+            <td>Synapse Analytics</td>
+            <td><code>Microsoft.Synapse/workspaces/sqlPools</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-syn</code></td>
+          </tr>
+          <tr>
+            <td>Cosmos DB</td>
+            <td><code>Microsoft.DocumentDB/databaseAccounts</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-ddb</code></td>
+          </tr>
+          <tr>
+            <td>Batch Services</td>
+            <td><code>Microsoft.Batch/batchAccounts</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-bs</code></td>
+          </tr>
+          <tr>
+            <td>Data Factory</td>
+            <td><code>Microsoft.DataFactory/factories</code></td>
+            <td><code>njrsbx-*</code></td>
+            <td><code>*-dfo</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Environment-Specific Rules:</strong></p>
+      <ul>
+        <li>Sandbox (<code>sbx</code>): <code>njrsbx-sbx-*</code></li>
+        <li>Development (<code>dev</code>): <code>njrsbx-dev-*</code>, <code>njrsbx-tst-*</code>, or <code>njrsbx-migt-*</code></li>
+        <li>Staging (<code>stg</code>): <code>njrsbx-stg-*</code>, <code>njrsbx-uat-*</code>, or <code>njrsbx-qa-*</code></li>
+        <li>Production (<code>prd</code>): <code>njrsbx-prd-*</code></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧪 Testing the Policy</h2>
+      <p>Test the policy by creating resources in the <code>njrsbx-dev-myapp1-rg</code> resource group with both compliant and non-compliant names.</p>
+      <h3>Test Commands and Results</h3>
+      <ol>
+        <li><strong>SQL Server (Compliant Name) - Passed</strong><br>
+          <div class="code-block">
+            <pre><code class="bash">az sql server create --name njrsbx-dev-mysqlserver-sql --resource-group njrsbx-dev-myapp1-rg --location eastus --admin-user [REDACTED] --admin-password [REDACTED]</code></pre>
+          </div>
+          <p><strong>Result</strong>: Creation succeeded as the name follows the pattern <code>njrsbx-dev-*-sql</code>.</p>
+        </li>
+        <li><strong>SQL Database (Compliant Name) - Passed</strong><br>
+          <div class="code-block">
+            <pre><code class="bash">az sql db create --resource-group njrsbx-dev-myapp1-rg --server njrsbx-dev-mysqlserver-sql --name njrsbx-dev-myapp1-db --edition GeneralPurpose --capacity 10 --family Gen5 --zone-redundant false --backup-storage-redundancy Local</code></pre>
+          </div>
+          <p><strong>Result</strong>: Creation succeeded as the name follows the pattern <code>njrsbx-dev-*-db</code>.</p>
+        </li>
+        <li><strong>Cosmos DB (Could Not Test)</strong><br>
+          <div class="code-block">
+            <pre><code class="bash">az cosmosdb create --name njrsbx-dev-mycosmos-ddb --resource-group njrsbx-dev-myapp1-rg --location eastus</code></pre>
+          </div>
+          <p><strong>Error</strong>: <code>(MissingSubscriptionRegistration) The subscription is not registered to use namespace 'Microsoft.DocumentDB'.</code></p>
+          <p><strong>Action</strong>: Register the subscription using:<br>
+            <div class="code-block">
+              <pre><code class="bash">az provider register --namespace Microsoft.DocumentDB</code></pre>
+            </div>
+          </p>
+        </li>
+        <li><strong>Batch Account (Failed Due to Name Length)</strong><br>
+          <div class="code-block">
+            <pre><code class="bash">az batch account create --name njrsbx-dev-mybatch-bs --resource-group njrsbx-dev-myapp1-rg --location eastus</code></pre>
+          </div>
+          <p><strong>Error</strong>: <code>(InvalidAccountName) The specified account name is invalid. The account name may contain only lowercase alphanumeric characters, and must be 3 to 24 characters in length.</code></p>
+          <p><strong>Fix</strong>: Use a shorter name, e.g.:<br>
+            <div class="code-block">
+              <pre><code class="bash">az batch account create --name njrsbx-dev-batch-bs --resource-group njrsbx-dev-myapp1-rg --location eastus</code></pre>
+            </div>
+          </p>
+        </li>
+        <li><strong>Data Factory (Compliant Name) - Passed</strong><br>
+          <div class="code-block">
+            <pre><code class="bash">az datafactory create --location "East US" --name njrsbx-dev-datafactortest-dfo --resource-group njrsbx-dev-myapp1-rg</code></pre>
+          </div>
+          <p><strong>Result</strong>: Creation succeeded as the name follows the pattern <code>njrsbx-dev-*-dfo</code>.</p>
+        </li>
+      </ol>
+      <h3>Testing Non-Compliant Names</h3>
+      <p>Try creating a resource with an invalid name, e.g.:</p>
+      <div class="code-block">
+        <pre><code class="bash">az sql server create --name invalidname --resource-group njrsbx-dev-myapp1-rg --location eastus --admin-user [REDACTED] --admin-password [REDACTED]</code></pre>
+      </div>
+      <p><strong>Expected Result</strong>: Creation should fail with a policy denial error.</p>
+    </section>
+
+    <section>
+      <h2>🛠 Troubleshooting</h2>
+      <ul>
+        <li><strong>Cosmos DB Registration Error</strong>:
+          <ul>
+            <li>Ensure the subscription is registered for <code>Microsoft.DocumentDB</code> using <code>az provider register --namespace Microsoft.DocumentDB</code>.</li>
+            <li>Check registration status with <code>az provider show --namespace Microsoft.DocumentDB</code>.</li>
+          </ul>
+        </li>
+        <li><strong>Batch Account Name Length</strong>:
+          <ul>
+            <li>Batch account names must be 3-24 characters and contain only lowercase alphanumeric characters.</li>
+            <li>Shorten the name to comply, e.g., <code>njrsbx-dev-batch-bs</code>.</li>
+          </ul>
+        </li>
+        <li><strong>Policy Not Enforced</strong>:
+          <ul>
+            <li>Verify the policy is assigned to the correct scope (subscription or resource group).</li>
+            <li>Check the policy parameter <code>environment</code> matches the deployment environment.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
   </main>
+
+  <footer>
+    © 2025 New John Refuse. Built with code, coffee, and Azure love ☁️
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
