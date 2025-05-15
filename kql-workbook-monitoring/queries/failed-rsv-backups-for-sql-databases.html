@@ -34,10 +34,34 @@
     section {
       margin-bottom: 3rem;
     }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
     section h2 {
       font-size: 2rem;
-      margin-bottom: 1rem;
       color: #58a6ff;
+      margin: 0;
+    }
+    .kb-button {
+      background: #58a6ff;
+      color: #e6edf3;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .kb-button:hover {
+      background: #1f6feb;
+      transform: translateY(-2px);
+    }
+    .kb-button:active {
+      transform: translateY(0);
     }
     .code-block {
       background: #161b22;
@@ -78,56 +102,15 @@
 
   <main class="content">
     <section>
-      <h2>📋 KQL Query</h2>
+      <div class="header-row">
+        <h2>📋 KQL Query</h2>
+        <a class="kb-button" href="../kb/failed-rsv-backups-for-sql-databases.html">View KB Article</a>
+      </div>
       <p>The KQL query for <strong>failed-rsv-backups-for-sql-databases</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">recoveryservicesresources
-| where type == "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems"
-| where properties.protectionStatus == "Unhealthy"
-| where properties.protectionState == "Protected"
-| where properties.lastBackupStatus == "Failed"
-| where properties.workloadType in~ ("SQLDataBase")
-| where isnotempty(properties.lastBackupTime) and todatetime(properties.lastBackupTime) >= ago(7d)
-| where subscriptionId in (
-    "00000000-aaaa-bbbb-cccc-111111111111",
-    "00000000-aaaa-bbbb-cccc-222222222222",
-    "00000000-aaaa-bbbb-cccc-333333333333",
-    "00000000-aaaa-bbbb-cccc-444444444444",
-    "00000000-aaaa-bbbb-cccc-555555555555",
-    "00000000-aaaa-bbbb-cccc-666666666666",
-    "00000000-aaaa-bbbb-cccc-777777777777",
-    "00000000-aaaa-bbbb-cccc-888888888888"
-)
-| extend subscriptionName = case(
-    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
-    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
-    "Unknown"
-)
-| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
-| project
-    ['Name'] = tostring(properties.friendlyName),
-    ['Location'] = location,
-    ['Resource Group'] = resourceGroup,
-    ['Subscription Name'] = subscriptionName,
-    ['Vault Name'] = split(id, "/")[8],
-    ['Resource Type'] = tostring(properties.workloadType),  
-    ['Last Backup Status'] = tostring(properties.lastBackupStatus),
-    ['Protection Status'] = tostring(properties.protectionStatus),  
-    ['Last Backup Time'] = todatetime(properties.lastBackupTime),  
-    ['Backup Management Type'] = tostring(properties.backupManagementType),  
-    ['Vault ID'] = tostring(properties.vaultId),  
-    ['Resource Link'] = ResourceLink
-| order by ['Last Backup Time'] desc
-</code></pre>
+        <pre><code class="kql">// KQL query for failed-rsv-backups-for-sql-databases will be added here...</code></pre>
       </div>
-      <a class="internal-link" href="../index.html">Back to KQL Workbook</a><br/>
-      <a class="internal-link" href="../kb/failed-rsv-backups-for-sql-databases.html">View KB Article</a>
+      <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>
   </main>
 
