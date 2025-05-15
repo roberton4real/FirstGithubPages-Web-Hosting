@@ -81,7 +81,41 @@
       <h2>📋 KQL Query</h2>
       <p>The KQL query for <strong>azure-vms-that-are-stopped-not-deallocated</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vms-that-are-stopped-not-deallocated will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type == 'microsoft.compute/virtualmachines'
+| extend powerState = tostring(properties.extended.instanceView.powerState.displayStatus)
+| where powerState == 'VM stopped' // If the VM is in a stopped state it should be deallocated to avoid incurring charges
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['VM Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Application'] = tostring(tags.Application),
+    ['Department'] = tostring(tags.Department),
+    ['Power State'] = powerState,
+    ['Resource Link'] = ResourceLink</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a><br/>
       <a class="internal-link" href="../kb/azure-vms-that-are-stopped-not-deallocated.html">View KB Article</a>

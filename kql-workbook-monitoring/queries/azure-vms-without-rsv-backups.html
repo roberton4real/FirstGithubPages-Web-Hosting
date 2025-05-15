@@ -81,7 +81,63 @@
       <h2>📋 KQL Query</h2>
       <p>The KQL query for <strong>azure-vms-without-rsv-backups</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vms-without-rsv-backups will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type in~ (
+    'microsoft.compute/virtualmachines',
+    'microsoft.classiccompute/virtualmachines'
+)
+| extend VMBackupRequiredTag = tostring(tags['VMBackupRequired'])
+| where isnull(VMBackupRequiredTag) or VMBackupRequiredTag == 'True'  
+| extend armResourceId = id
+| extend resourceId = tolower(armResourceId)
+| join kind = leftouter (
+    recoveryservicesresources
+    | where type == "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems"
+    | where properties.backupManagementType == "AzureIaasVM"
+    | where properties.workloadType in~ ("VM")
+    | project
+        resourceId = tolower(tostring(properties.sourceResourceId)),
+        backupItemid = id,
+        isBackedUp = isnotempty(id)
+) on resourceId
+| extend isProtected = isnotempty(backupItemid)
+| where isProtected == 0
+| join kind = inner (
+    resourcecontainers
+    | where type == "microsoft.resources/subscriptions"
+    | project subscriptionId, subscriptionName = name
+) on $left.subscriptionId == $right.subscriptionId
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['VM Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Application'] = tostring(tags.Application),
+    ['Department'] = tostring(tags.Department),
+    ['Vm Backup Required Tag'] = VMBackupRequiredTag,
+    ['Resource Link'] = ResourceLink</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a><br/>
       <a class="internal-link" href="../kb/azure-vms-without-rsv-backups.html">View KB Article</a>
