@@ -1,17 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>KQL Workbook Monitoring</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KQL Workbook – Azure Resource Queries</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: #0e1117;
+            color: #e6edf3;
+        }
+        header {
+            text-align: center;
+            padding: 4rem 1rem 2rem;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: #8b949e;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 2rem;
+        }
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            background: #161b22;
+            color: #8b949e;
+            border: 1px solid #30363d;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            margin-right: 0.5rem;
+            transition: background 0.3s, color 0.3s;
+        }
+        .tab.active {
+            background: #58a6ff;
+            color: #e6edf3;
+        }
+        .tab:hover {
+            background: #21262d;
+            color: #e6edf3;
+        }
+        .tab-content {
+            display: none;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #58a6ff;
+        }
+        .code-block {
+            background: #0e1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+        pre code {
+            color: #e6edf3;
+        }
+        .external-link {
+            color: #58a6ff;
+            text-decoration: none;
+            border-bottom: 1px dashed #58a6ff;
+        }
+        .external-link:hover {
+            color: #1f6feb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+        th {
+            background: #30363d;
+            color: #58a6ff;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+        }
+    </style>
 </head>
 <body>
-    <main class="main">
-        <section class="section">
-            <h1>KQL Workbook Monitoring</h1>
-            <p>This is the project page for <strong>KQL Workbook Monitoring</strong>. Customize this content as needed.</p>
-            <a href="../index.html">← Back to Portfolio</a>
-        </section>
+    <header>
+        <h1>KQL Workbook</h1>
+        <p>Interactive queries for Azure resource management and optimization</p>
+    </header>
+
+    <main class="content">
+        <div class="tabs">
+            <div class="tab active" data-tab="sql-databases">SQL Databases</div>
+            <div class="tab" data-tab="storage-accounts">Storage Accounts</div>
+            <div class="tab" data-tab="unused-resources">Unused Resources</div>
+            <div class="tab" data-tab="virtual-machines">Virtual Machines</div>
+        </div>
+
+        <div class="tab-content active" id="sql-databases">
+            <section>
+                <h2>SQL Databases</h2>
+                <p>Queries for monitoring and optimizing SQL Database resources in Azure.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Last Commit</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/Failed%20RSV%20backups%20for%20SQL%20databases">Failed RSV backups for SQL databases</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/8ef1216f238d5680523b9903844d0f3d7a4ad5bd">Adding kql queries files</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/Restored%20SQL%20Databases">Restored SQL Databases</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/0596604c20d7397a904a165f2eb78b0bfa848100">Update Restored SQL Databases</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/SQL%20Backups%20with%20Protection%20Stopped">SQL Backups with Protection Stopped</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/8df525e1c66007f5ea821a4841d27f10025a7f61">Update SQL Backups with Protection Stopped</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/SQL%20Databases%20Not%20Using%20LRS%20Backup">SQL Databases Not Using LRS Backup</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/85001765960b57cd3ee99d2575b1a54daae55ff7">Update SQL Databases Not Using LRS Backup</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/SQL%20IaaS%20Backups%20without%20Protected%20Data%20Sources">SQL IaaS Backups without Protected Data Sources</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/00a6667ff09c17acdaae63cb540d10ac6c05e356">Update SQL IaaS Backups without Protected Data Sources</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/SQL%20Databases/Soft-Deleted%20SQL%20Backups">Soft-Deleted SQL Backups</a></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <pre><code class="kql">// Query content to be loaded here (e.g., via Python fetching from GitHub)</code></pre>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="storage-accounts">
+            <section>
+                <h2>Storage Accounts</h2>
+                <p>Queries for identifying and managing Azure Storage Account configurations.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Last Commit</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Storage%20Accounts/Non-V2%20Storage%20Accounts">Non-V2 Storage Accounts</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/7412bbbdfd6f1dbff0e327dd3ce8dbddc3a2079d">Update Non-V2 Storage Accounts</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Storage%20Accounts/Storage%20Accounts%20Not%20LRS">Storage Accounts Not LRS</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/b094543cf4c6bfd165e20c66cfc7a358d807a71f">Update Storage Accounts Not LRS</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Storage%20Accounts/Storage%20Accounts%20with%20Public%20Access">Storage Accounts with Public Access</a></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <pre><code class="kql">// Query content to be loaded here (e.g., via Python fetching from GitHub)</code></pre>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="unused-resources">
+            <section>
+                <h2>Unused Resources</h2>
+                <p>Queries to identify and clean up unused Azure resources.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Last Commit</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Empty%20Resource%20Groups">Empty Resource Groups</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/bca1bf0e8b507f1673cb75429c20a48b13123730">Update Empty Resource Groups</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Stale%20Disk%20Snapshots">Stale Disk Snapshots</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/8fd591ac8ec313741f88d9449ed0042a7c9316ca">Update Stale Disk Snapshots</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Test%20Resource%20Groups">Test Resource Groups</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/7eea9cf93c9c36604e5bc98fb28104a87b797b9d">Update Test Resource Groups</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Unattached%20Disks">Unattached Disks</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/27cdd1b7514ba12ea929ce1ef3e2575bed0cec02">Update Unattached Disks</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Unattached%20NICs">Unattached NICs</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/8ef1216f238d5680523b9903844d0f3d7a4ad5bd">Adding kql queries files</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Unused%20Resources/Unused%20Public%20IPs">Unused Public IPs</a></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <pre><code class="kql">// Query content to be loaded here (e.g., via Python fetching from GitHub)</code></pre>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="virtual-machines">
+            <section>
+                <h2>Virtual Machines</h2>
+                <p>Queries for managing and optimizing Azure Virtual Machine resources.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Query</th>
+                            <th>Last Commit</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VM%20Backups%20in%20a%20RSV%20that%20are%20Soft-Deleted">Azure VM Backups in a RSV that are Soft-Deleted</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/887f2586c68d0154c4479c294d6932e2fae7738d">Add KQL queries</a></td>
+                            <td>3 weeks ago</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VM%20Backups%20in%20a%20RSV%20with%20Protection%20Stopped">Azure VM Backups in a RSV with Protection Stopped</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/64876334130308d083fdd04b16718ca326574aac">Update Azure VM Backups in a RSV with Protection Stopped</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VM%20Backups%20in%20a%20RSV%20with%20no%20Source%20VM">Azure VM Backups in a RSV with no Source VM</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/eedeaebd8a0ab8bb8c3af4ce17085d6f82cce64a">Update Azure VM Backups in a RSV with no Source VM</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VMs%20Not%20Utilizing%20AHUB">Azure VMs Not Utilizing AHUB</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/97c64da402b2774929c69fc83303eae6105c5ba6">Update Azure VMs Not Utilizing AHUB</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VMs%20that%20are%20Deallocated">Azure VMs that are Deallocated</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/fce88453694e8d16175aa8db32b11bdc6f449136">Update Azure VMs that are Deallocated</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VMs%20that%20are%20Stopped%20(not%20Deallocated)">Azure VMs that are Stopped (not Deallocated)</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/3c635f9b3b2e9db60656782efd59320c7f8eca8e">Update Azure VMs that are Stopped (not Deallocated)</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Azure%20VMs%20without%20RSV%20Backups">Azure VMs without RSV Backups</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/45352bba81d36b2762cf610962ab023999ba8a90">Update Azure VMs without RSV Backups</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Failed%20RSV%20backups%20for%20VMs">Failed RSV backups for VMs</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/1319b510559884ddf34dd63cc4876557972cfe53">Update Failed RSV backups for VMs</a></td>
+                            <td>last month</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Linux%20VMs%20with%20AHUB%20enabled">Linux VMs with AHUB enabled</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/1dd721aacbc913422c516a8effe3f88b07cb5e92">Add KQL queries</a></td>
+                            <td>3 weeks ago</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Recovery%20Services%20Vault%20MUA%20%26%20Guard%20Compliance%20Dashboard">Recovery Services Vault MUA & Guard Compliance Dashboard</a></td>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/commit/1dd721aacbc913422c516a8effe3f88b07cb5e92">Add KQL queries</a></td>
+                            <td>3 weeks ago</td>
+                        </tr>
+                        <tr>
+                            <td><a class="external-link" href="https://github.com/roberton4real/KQL-Query/blob/main/KQL%20Updated%20Queries/Virtual%20Machines/Windows%20VMs%20without%20AHUB%20enabled">Windows VMs without AHUB enabled</a></td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="code-block">
+                    <pre><code class="kql">// Query content to be loaded here (e.g., via Python fetching from GitHub)</code></pre>
+                </div>
+            </section>
+        </div>
     </main>
-</body>
-</html>
+
+    <footer>
+        © 2025 KQL Workbook. Built with code, coffee, and Azure love ☁️
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+
+        // Tab switching logic
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Future Python integration note:
+        // To dynamically load query content, use a Python backend (e.g., Flask/FastAPI) with the GitHub API
+        // to fetch raw file content from the provided GitHub URLs. Update the code-block divs with the fetched KQL.
+        // Example endpoint: GET /query?url=<encoded_github_url>
+        // Use JavaScript fetch() to call the endpoint and update the DOM.
+    </script>
