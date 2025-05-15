@@ -1,0 +1,42 @@
+resources
+| where type =~ "microsoft.network/publicipaddresses"
+| extend ipName = tostring(name)
+| extend resourceGroup = tostring(resourceGroup)
+| extend subscriptionId = tostring(subscriptionId)
+| extend ipAddress = tostring(properties.ipAddress)
+| extend ipConfig = tostring(properties.ipConfiguration.id) 
+| extend allocationMethod = tostring(properties.publicIPAllocationMethod) 
+| extend sku = tostring(properties.sku.name) 
+| extend dnsName = tostring(properties.dnsSettings.fqdn) 
+| where isnull(ipConfig) 
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['Name'] = ipName,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Ip Config'] = ipConfig,
+    ['Ip Address'] = ipAddress,
+    ['Allocation Method'] = allocationMethod,
+    ['Resource Link'] = ResourceLink

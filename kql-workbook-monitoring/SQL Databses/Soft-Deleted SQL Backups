@@ -1,0 +1,50 @@
+recoveryservicesresources
+| where type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems'
+| extend vaultName = case(
+    type =~ 'microsoft.dataprotection/backupVaults/backupInstances',
+    split(split(id, '/Microsoft.DataProtection/backupVaults/')[1], '/')[0],
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    split(split(id, '/Microsoft.RecoveryServices/vaults/')[1], '/')[0],
+    '--'
+)
+| extend dataSourceType = case(
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    properties.backupManagementType,
+    type =~ 'microsoft.dataprotection/backupVaults/backupInstances',
+    properties.dataSourceSetInfo.datasourceType,
+    '--'
+)
+| extend isSoftDeleted = tostring(properties.protectionState)
+| extend softDeleteRetentionPeriod = toint(properties.softDeleteRetentionPeriod)
+| where isSoftDeleted == 'SoftDeleted'  // Filter for currently soft-deleted backups
+| where dataSourceType in~ ('AzureWorkload/SQLDatabase')  // SQL-specific filtering
+| order by name asc
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Is Soft Deleted'] = isSoftDeleted,
+    ['Resource Link'] = ResourceLink

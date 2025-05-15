@@ -1,0 +1,40 @@
+resources
+| where type == "microsoft.storage/storageaccounts"
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| where properties.allowBlobPublicAccess == true
+| extend
+    SubscriptionName = case(
+        subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+        subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+        "Unknown"
+    ),
+    ResourceLink = strcat("https://portal.azure.com/#@", tenantId, "/resource", id)
+| project
+    Name = name,
+    Location = location,
+    ['Resource Group'] = resourceGroup,
+    ["Subscription Name"] = SubscriptionName,
+    Application = coalesce(tags.Application, "N/A"),
+    Department = coalesce(tags.Department, "N/A"),
+    ["Allow Blob Public Access"] = properties.allowBlobPublicAccess,
+    ["Creation Time"] = properties.creationTime,
+    ["Primary Location"] = properties.primaryLocation,
+    ["Sku Name"] = sku.name,
+    ["Sku Tier"] = sku.tier,
+    ["Resource Link"] = ResourceLink
+| order by ["Subscription Name"] asc
