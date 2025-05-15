@@ -1,17 +1,18 @@
 import os
+import shutil
 import re
 
-# Function to slugify titles into folder-friendly names
+# Function to slugify titles into folder-friendly names (must match creation script)
 def slugify(text):
     text = text.lower()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'\s+', '-', text)
     return text
 
-# Base directory (current working directory)
+# Base directory (where this script lives / project root)
 base_dir = os.getcwd()
 
-# Organized queries by category
+# Same categories dict used to create the folders
 categories = {
     "sql-databases": [
         "Failed RSV backups for SQL databases",
@@ -49,40 +50,31 @@ categories = {
     ]
 }
 
-# HTML template for each project page
-html_template = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{title}</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
-</head>
-<body>
-    <main class="main">
-        <section class="section">
-            <h1>{title}</h1>
-            <p>This is the project page for <strong>{title}</strong>. Customize this content as needed.</p>
-            <a href="../index.html">← Back to Workbook</a>
-        </section>
-    </main>
-</body>
-</html>"""
+deleted_count = 0
+removed_categories = 0
 
-# Create category folders and query subfolders with index.html
-total_folders = 0
-for category, queries in categories.items():
+for category, titles in categories.items():
     category_path = os.path.join(base_dir, category)
-    os.makedirs(category_path, exist_ok=True)
-    
-    for title in queries:
+    if not os.path.isdir(category_path):
+        continue
+
+    # Remove each query subfolder
+    for title in titles:
         folder_name = slugify(title)
         folder_path = os.path.join(category_path, folder_name)
-        os.makedirs(folder_path, exist_ok=True)
-        
-        file_path = os.path.join(folder_path, "index.html")
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(html_template.format(title=title))
-        
-        total_folders += 1
+        if os.path.isdir(folder_path):
+            shutil.rmtree(folder_path)
+            deleted_count += 1
+            print(f"Deleted folder: {folder_path}")
 
-print(f"Folders and internal pages created for {total_folders} queries across {len(categories)} categories.")
+    # If the category folder is now empty, remove it as well
+    try:
+        if not os.listdir(category_path):
+            os.rmdir(category_path)
+            removed_categories += 1
+            print(f"Removed empty category folder: {category_path}")
+    except OSError as e:
+        print(f"Could not remove {category_path}: {e}")
+
+print(f"\nDeleted {deleted_count} query folders.")
+print(f"Removed {removed_categories} empty category folders.")
