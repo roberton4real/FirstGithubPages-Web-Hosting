@@ -1,17 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Change Backup Redundancy to LRS</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Policy Library – New John Refuse</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #0e1117;
+      color: #e6edf3;
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 1rem 2rem;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #8b949e;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #58a6ff;
+    }
+
+    .code-block {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    pre code {
+      color: #e6edf3;
+    }
+
+    .external-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #58a6ff;
+      text-decoration: none;
+      border-bottom: 1px dashed #58a6ff;
+    }
+
+    .external-link:hover {
+      color: #1f6feb;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      color: #8b949e;
+      border-top: 1px solid #30363d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #30363d;
+    }
+
+    th {
+      background: #21262d;
+      color: #58a6ff;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    ul, ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <main class="main">
-        <section class="section">
-            <h1>Change Backup Redundancy to LRS</h1>
-            <p>This is the project page for <strong>Change Backup Redundancy to LRS</strong>. Customize this content as needed.</p>
-            <a href="../index.html">← Back to Portfolio</a>
-        </section>
-    </main>
+  <header>
+    <h1>Azure Policy Library</h1>
+    <p>Curated policies, automation snippets, and architecture insights by New John Refuse</p>
+  </header>
+
+  <main class="content">
+    <section>
+      <h2>💡 What This Is</h2>
+      <p>A centralized hub of Azure governance knowledge. Explore policies, code snippets, and cloud standards—all handcrafted for clarity, reuse, and automation.</p>
+    </section>
+
+    <section>
+      <h2>📘 KB23911: SQL Databases Not Using LRS Backup</h2>
+      <p><strong>Status: Draft</strong></p>
+      <p>This guide addresses Azure SQL Databases not using Locally Redundant Storage (LRS) backups, providing steps to verify backup settings, migrate a Hyperscale database to a General Purpose tier with LRS backups, and create a sandbox environment with a Hyperscale database, including a policy exemption for restricted resources.</p>
+    </section>
+
+    <section>
+      <h2>🔍 Identifying SQL Databases Not Using LRS Backup</h2>
+      <p>Azure SQL Databases can use LRS, Geo-Redundant Storage (GRS), or Zone-Redundant Storage (ZRS) for backups. To check the redundancy type:</p>
+      <ul>
+        <li>In the Azure Portal, go to <strong>SQL Databases</strong>, select your database, and check <strong>Backup storage redundancy</strong> under <strong>Backup settings</strong>.</li>
+        <li>Or use the Azure CLI:</li>
+      </ul>
+      <div class="code-block">
+        <pre><code class="bash">az sql db show --resource-group &lt;resource-group&gt; --server &lt;server-name&gt; --name &lt;database-name&gt; --query "currentBackupStorageRedundancy"</code></pre>
+      </div>
+      <h3>Common Reasons for Not Using LRS</h3>
+      <ul>
+        <li><strong>Manual Configuration</strong>: Backups set to GRS or ZRS for business continuity.</li>
+        <li><strong>Availability Zones</strong>: ZRS or GRS used for geographic redundancy.</li>
+        <li><strong>Policy Enforcement</strong>: Organizational policies mandating GRS or ZRS for compliance.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🚀 Migrating a Hyperscale Database to General Purpose with LRS</h2>
+      <p>Brand-new Hyperscale databases cannot use reverse migration to a non-Hyperscale tier. Use a BACPAC export/import to migrate to General Purpose with LRS backups.</p>
+      <h3>Limitations for Reverse Migration</h3>
+      <ul>
+        <li>Only available within 45 days of migrating to Hyperscale.</li>
+        <li>Databases created as Hyperscale are ineligible.</li>
+        <li>Targets only General Purpose tier (provisioned/serverless).</li>
+        <li>Not supported for databases with &lt; 2 vCores or in elastic pools.</li>
+        <li>Use BACPAC or data movement tools (e.g., Azure Data Factory) for ineligible databases.</li>
+      </ul>
+      <h3>Prerequisites</h3>
+      <ul>
+        <li>No Geo-Replication or named replicas enabled.</li>
+        <li>Database size fits target General Purpose tier.</li>
+        <li>Azure CLI installed and authenticated (<code>az login</code>).</li>
+        <li>Firewall rules allow connectivity to SQL servers.</li>
+      </ul>
+      <h3>Migration Steps</h3>
+      <ol>
+        <li><strong>Prerequisites</strong>
+          <ul>
+            <li>Install Azure CLI: <—A href="https://learn.microsoft.com/cli/azure/install-azure-cli" class="interior-link">Instructions</A>.</li>
+            <li>Authenticate:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">az login</code></pre>
+          </div>
+          <ul>
+            <li>Identify Hyperscale server name (without <code>.database.windows.net</code>), database name, and admin credentials.</li>
+            <li>Create/use a resource group:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">az group create --name &lt;resource-group&gt; --location &lt;location&gt; --tags Department="Data Services"</code></pre>
+          </div>
+        </li>
+        <li><strong>Create Storage Account and Container</strong>
+          <div class="code-block">
+            <pre><code class="bash"># Set variables
+RESOURCE_GROUP="&lt;resource-group&gt;"
+LOCATION="&lt;location&gt;"
+STORAGE_ACCOUNT="&lt;storage-account&gt;"
+
+# Create storage account (LRS)
+az storage account create --name $STORAGE_ACCOUNT --resource-group $RESOURCE_GROUP --location $LOCATION --sku Standard_LRS
+
+# Create blob container
+CONTAINER_NAME="bacpacexports"
+az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT</code></pre>
+          </div>
+        </li>
+        <li><strong>Export Hyperscale Database to BACPAC</strong>
+          <ul>
+            <li>Get storage account key:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">STORAGE_KEY=$(az storage account keys list --resource-group $RESOURCE_GROUP --account-name $STORAGE_ACCOUNT --query "[0].value" -o tsv)</code></pre>
+          </div>
+          <ul>
+            <li>Construct storage URI:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">BACPAC_NAME="&lt;database-name&gt;.bacpac"
+STORAGE_URI="https://${STORAGE_ACCOUNT}.blob.core.windows.net/${CONTAINER_NAME}/${BACPAC_NAME}"</code></pre>
+          </div>
+          <ul>
+            <li>Run export:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">OLD_SERVER_NAME="&lt;hyperscale-server&gt;"
+DB_NAME="&lt;database-name&gt;"
+SQL_ADMIN_USER="&lt;admin-user&gt;"
+SQL_ADMIN_PASSWORD="&lt;admin-password&gt;"
+
+az sql db export \
+  --admin-user $SQL_ADMIN_USER \
+  --admin-password $SQL_ADMIN_PASSWORD \
+  --name $DB_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --server $OLD_SERVER_NAME \
+  --storage-key-type "StorageAccessKey" \
+  --storage-key $STORAGE_KEY \
+  --storage-uri $STORAGE_URI</code></pre>
+          </div>
+        </li>
+        <li><strong>Create New SQL Server with LRS Backups</strong>
+          <div class="code-block">
+            <pre><code class="bash">NEW_SERVER_NAME="&lt;new-server&gt;"
+NEW_SQL_ADMIN="&lt;new-admin&gt;"
+NEW_SQL_PASSWORD="&lt;new-password&gt;"
+
+az sql server create \
+  --name $NEW_SERVER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --location $LOCATION \
+  --admin-user $NEW_SQL_ADMIN \
+  --admin-password $NEW_SQL_PASSWORD \
+  --backup-storage-redundancy Local</code></pre>
+          </div>
+        </li>
+        <li><strong>Import BACPAC to General Purpose Tier</strong>
+          <div class="code-block">
+            <pre><code class="bash">NEW_DB_NAME="&lt;new-database-name&gt;"
+
+az sql db import \
+  --admin-user $NEW_SQL_ADMIN \
+  --admin-password $NEW_SQL_PASSWORD \
+  --name $NEW_DB_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --server $NEW_SERVER_NAME \
+  --storage-key $STORAGE_KEY \
+  --storage-key-type "StorageAccessKey" \
+  --storage-uri $STORAGE_URI \
+  --edition GeneralPurpose \
+  --compute-model Provisioned \
+  --service-objective GP_Gen5_2</code></pre>
+          </div>
+          <p>Adjust <code>--service-objective</code> or <code>--edition</code> as needed.</p>
+        </li>
+        <li><strong>Verify and Update Application</strong>
+          <ul>
+            <li>Verify database:</li>
+          </ul>
+          <div class="code-block">
+            <pre><code class="bash">az sql db show \
+  --resource-group $RESOURCE_GROUP \
+  --server $NEW_SERVER_NAME \
+  --name $NEW_DB_NAME \
+  --query "{Name:name,Edition:sku.tier,Status:status}"</code></pre>
+          </div>
+          <p>Expect: <code>"Edition": "GeneralPurpose"</code>.</p>
+          <ul>
+            <li>Test connectivity to <code>&lt;new-server&gt;.database.windows.net</code>.</li>
+            <li>Update application connection string.</li>
+          </ul>
+        </li>
+        <li><strong>Clean Up (Optional)</strong>
+          <div class="code-block">
+            <pre><code class="bash">az sql db delete \
+  --resource-group $RESOURCE_GROUP \
+  --server $OLD_SERVER_NAME \
+  --name $DB_NAME \
+  --yes</code></pre>
+          </div>
+          <p>Delete old server if no longer needed.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>🛠 Troubleshooting Migration</h2>
+      <ul>
+        <li><strong>Firewall Issues</strong>:
+          <div class="code-block">
+            <pre><code class="bash">az sql server firewall-rule create \
+  --resource-group $RESOURCE_GROUP \
+  --server &lt;server-name&gt; \
+  --name AllowAllWindowsAzureIps \
+  --start-ip-address 0.0.0.0 \
+  --end-ip-address 0.0.0.0</code></pre>
+          </div>
+        </li>
+        <li><strong>Large Databases</strong>: Use SSMS or SqlPackage for BACPAC export/import.</li>
+        <li><strong>Tier Constraints</strong>: Ensure target tier supports database size.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧪 Creating a Sandbox Environment with Hyperscale Database</h2>
+      <p>Create a sandbox to test Hyperscale databases, with a policy exemption if Hyperscale is restricted.</p>
+      <h3>Steps</h3>
+      <ol>
+        <li><strong>Create Sandbox Resource Group</strong>
+          <div class="code-block">
+            <pre><code class="bash">az group create --name &lt;sandbox-rg&gt; --location &lt;location&gt; --subscription &lt;subscription-id&gt; --tags Department="Data Services"</code></pre>
+          </div>
+          <p>Verify:</p>
+          <div class="code-block">
+            <pre><code class="bash">az group show --name &lt;sandbox-rg&gt;</code></pre>
+          </div>
+        </li>
+        <li><strong>Apply Policy Exemption</strong>
+          <div class="code-block">
+            <pre><code class="bash">az policy exemption create \
+  --name HyperscaleTestExemption \
+  --policy-assignment "&lt;policy-assignment-id&gt;" \
+  --exemption-category Waiver \
+  --scope "/subscriptions/&lt;subscription-id&gt;/resourceGroups/&lt;sandbox-rg&gt;" \
+  --description "Temporary exemption for Hyperscale DB testing in sandbox"</code></pre>
+          </div>
+          <p>Verify:</p>
+          <div class="code-block">
+            <pre><code class="bash">az policy exemption show --name HyperscaleTestExemption --scope "/subscriptions/&lt;subscription-id&gt;/resourceGroups/&lt;sandbox-rg&gt;"</code></pre>
+          </div>
+        </li>
+        <li><strong>Deploy Hyperscale Database with Terraform</strong>
+          <p>Example <code>main.tf</code>:</p>
+          <div class="code-block">
+            <pre><code class="hcl">provider "azurerm" {
+  features {}
+  subscription_id = "&lt;subscription-id&gt;"
+}
+
+data "azurerm_resource_group" "sandbox" {
+  name = "&lt;sandbox-rg&gt;"
+}
+
+resource "azurerm_mssql_server" "source" {
+  name                         = "&lt;sandbox-server&gt;"
+  resource_group_name          = data.azurerm_resource_group.sandbox.name
+  location                     = data.azurerm_resource_group.sandbox.location
+  version                      = "12.0"
+  administrator_login          = "&lt;admin-user&gt;"
+  administrator_login_password = "&lt;secure-password&gt;"
+}
+
+resource "azurerm_mssql_firewall_rule" "source_azure" {
+  name                = "AllowAllAzureServices"
+  resource_group_name = data.azurerm_resource_group.sandbox.name
+  server_name         = azurerm_mssql_server.source.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
+resource "azurerm_mssql_database" "source_db" {
+  name           = "&lt;sandbox-db&gt;"
+  server_id      = azurerm_mssql_server.source.id
+  sku_name       = "HS_Gen5_2"
+  zone_redundant = true
+}</code></pre>
+          </div>
+          <p>Run Terraform:</p>
+          <div class="code-block">
+            <pre><code class="bash">terraform init
+terraform plan -out=tfplan
+terraform apply tfplan</code></pre>
+          </div>
+          <p>Verify:</p>
+          <div class="code-block">
+            <pre><code class="bash">az sql db show --resource-group &lt;sandbox-rg&gt; --server &lt;sandbox-server&gt; --name &lt;sandbox-db&gt;</code></pre>
+          </div>
+          <p>Expect: <code>"edition": "Hyperscale"</code>, <code>"sku.name": "HS_Gen5_2"</code>, <code>"currentBackupStorageRedundancy": "Zone"</code>.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>📝 Final Notes</h2>
+      <ul>
+        <li><strong>Backup Redundancy</strong>: Changing backup storage to LRS requires System Administrator confirmation due to process complexity. Use BACPAC migration as outlined.</li>
+        <li><strong>Sandbox Setup</strong>: Ensure naming conventions align with organizational standards. Policy exemption enables Hyperscale testing.</li>
+        <li><strong>Next Steps</strong>: Test General Purpose migration with LRS backups in the sandbox using BACPAC export/import.</li>
+      </ul>
+      <p>This guide ensures compliance with Azure best practices while addressing policy constraints and technical limitations.</p>
+      <a class="external-link" href="https://github.com/roberton4real/azure-policy-library" target="_blank">📂 View Full Repository</a>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 New John Refuse. Built with code, coffee, and Azure love ☁️
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
