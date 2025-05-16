@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Knowledge Base: azure-vm-backups-in-a-rsv-that-are-soft-deleted – KQL Workbook</title>
+  <title>Knowledge Base: Identifying and Deleting Unattached Network Interfaces (NICs) – KQL Workbook</title>
 
   <!-- Highlight.js -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet" />
@@ -56,6 +56,12 @@
       color: #58a6ff;
     }
 
+    section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: #c3d1d9;
+    }
+
     .code-block {
       background: #161b22;
       border: 1px solid #30363d;
@@ -68,6 +74,18 @@
 
     pre code {
       color: #e6edf3;
+    }
+
+    .internal-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #58a6ff;
+      text-decoration: none;
+      border-bottom: 1px solid #58a6ff;
+    }
+
+    .internal-link:hover {
+      color: #1f6feb;
     }
 
     footer {
@@ -134,14 +152,129 @@
   </a>
 
   <header>
-    <h1>Knowledge Base: azure-vm-backups-in-a-rsv-that-are-soft-deleted</h1>
-    <p>Documentation and insights for azure-vm-backups-in-a-rsv-that-are-soft-deleted in the KQL Workbook</p>
+    <h1>Knowledge Base: Identifying and Deleting Unattached Network Interfaces (NICs)</h1>
+    <p>Documentation and insights for identifying and deleting unattached Azure Network Interfaces (NICs) in the KQL Workbook</p>
   </header>
 
   <main class="content">
     <section>
-      <h2>📘 KB: azure-vm-backups-in-a-rsv-that-are-soft-deleted</h2>
-      <p>Details, best practices, and troubleshooting tips for azure-vm-backups-in-a-rsv-that-are-soft-deleted will be added here.</p>
+      <h2>📘 KB: Identifying and Deleting Unattached Network Interfaces (NICs)</h2>
+      <p>This guide assists users in identifying unattached Azure Network Interfaces (NICs), understanding why they may be unassigned, and safely deleting them to optimize costs and resource management.</p>
+
+      <h3>Why Delete Unattached NICs?</h3>
+      <ul>
+        <li><strong>Cost Optimization:</strong> Unattached NICs, especially those with public IP addresses, can incur costs. Removing unused NICs reduces unnecessary expenses.</li>
+        <li><strong>Resource Management:</strong> Deleting unattached NICs declutters the Azure environment, making it easier to manage and monitor active resources.</li>
+        <li><strong>Security Considerations:</strong> Unused NICs can inadvertently expose public IP addresses or configurations, posing potential security risks.</li>
+      </ul>
+
+      <h3>Steps to Identify and Delete Unattached NICs</h3>
+
+      <h4>1. Identify Unattached NICs</h4>
+      <p><strong>Using Azure Portal:</strong></p>
+      <ol>
+        <li>Navigate to the <a href="https://portal.azure.com" target="_blank">Azure Portal</a>.</li>
+        <li>Go to <strong>Network Interfaces</strong> under <strong>All Services</strong>.</li>
+        <li>Filter by <strong>Unattached</strong> to list NICs not associated with any Virtual Machine (VM).</li>
+      </ol>
+
+      <p><strong>Using Azure CLI:</strong></p>
+      <p>List all NICs and filter for those not attached to a VM:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic list --query "[?virtualMachine==null].{Name:name, ResourceGroup:resourceGroup, Id:id}" -o table</code></pre>
+      </div>
+      <p>This command retrieves NICs with no associated VM, displaying their name, resource group, and ID.</p>
+
+      <p><strong>Using KQL (Azure Resource Graph):</strong></p>
+      <p>Query unattached NICs using Azure Resource Graph Explorer:</p>
+      <div class="code-block">
+        <pre><code class="language-kql">Resources
+| where type == 'microsoft.network/networkinterfaces'
+| where isnull(properties.virtualMachine)
+| project name, resourceGroup, id, location, tags
+| order by name asc
+</code></pre>
+      </div>
+      <p>This KQL query lists all unattached NICs, including their name, resource group, ID, location, and tags, sorted by name.</p>
+
+      <h4>2. Evaluate the NIC's Purpose</h4>
+      <ul>
+        <li><strong>Check Usage History:</strong> Review Azure Activity Logs or documentation to determine if the NIC was previously associated with a VM or service.</li>
+        <li><strong>Consult Teams:</strong> Confirm with resource owners or teams if the NIC is needed for future deployments.</li>
+        <li><strong>Review Tags and Configurations:</strong> Check for tags, public IP assignments, or configurations that indicate the NIC's purpose.</li>
+      </ul>
+      <p><strong>Azure CLI Command to Check NIC Details:</strong></p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic show --name <nic-name> --resource-group <resource-group></code></pre>
+      </div>
+      <p>Replace <code>&lt;nic-name&gt;</code> and <code>&lt;resource-group&gt;</code> with the appropriate values to view details like IP configurations and NSG associations.</p>
+
+      <h4>3. Disassociate Resources Before Deletion</h4>
+      <p><strong>Public IP Addresses:</strong></p>
+      <p>If the NIC has a public IP, disassociate it:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic ip-config update \
+  --name <ip-config-name> \
+  --nic-name <nic-name> \
+  --resource-group <resource-group> \
+  --remove publicIpAddress</code></pre>
+      </div>
+      <p>Find the <code>&lt;ip-config-name&gt;</code> using <code>az network nic show</code>.</p>
+
+      <p><strong>Network Security Groups (NSGs):</strong></p>
+      <p>Dissociate any NSG from the NIC:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic update \
+  --name <nic-name> \
+  --resource-group <resource-group> \
+  --remove networkSecurityGroup</code></pre>
+      </div>
+
+      <p><strong>Application Security Groups (ASGs):</strong></p>
+      <p>Remove the NIC from any ASGs:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic ip-config update \
+  --name <ip-config-name> \
+  --nic-name <nic-name> \
+  --resource-group <resource-group> \
+  --remove applicationSecurityGroups</code></pre>
+      </div>
+
+      <h4>4. Delete the Unattached NIC</h4>
+      <p><strong>Using Azure Portal:</strong></p>
+      <ol>
+        <li>Select the unattached NIC from the list.</li>
+        <li>Click <strong>Delete</strong> and confirm the deletion.</li>
+      </ol>
+
+      <p><strong>Using Azure CLI:</strong></p>
+      <div class="code-block">
+        <pre><code class="language-bash">az network nic delete --name <nic-name> --resource-group <resource-group></code></pre>
+      </div>
+      <p>Ensure all dependencies (e.g., public IPs, NSGs) are dissociated before running this command.</p>
+
+      <h4>5. Document and Communicate</h4>
+      <ul>
+        <li><strong>Record Deletions:</strong> Update change management systems or documentation to reflect the deletion.</li>
+        <li><strong>Inform Stakeholders:</strong> Notify relevant teams, especially if the NIC was shared across projects.</li>
+      </ul>
+
+      <h3>Best Practices</h3>
+      <ul>
+        <li><strong>Tag Resources:</strong> Use tags to indicate the purpose or owner of NICs, making it easier to evaluate their necessity.</li>
+        <li><strong>Automate Cleanup:</strong> Use Azure Automation or PowerShell scripts to periodically identify and flag unattached NICs.</li>
+        <li><strong>Monitor Costs:</strong> Use Azure Cost Management to track expenses related to NICs and associated public IPs.</li>
+        <li><strong>Regular Audits:</strong> Schedule monthly reviews of network resources to identify and clean up unattached NICs.</li>
+      </ul>
+
+      <h3>Troubleshooting Tips</h3>
+      <ul>
+        <li><strong>Cannot Delete NIC:</strong> Ensure all dependencies (public IPs, NSGs, ASGs) are dissociated. Check for locks on the resource group using <code>az lock list --resource-group &lt;resource-group&gt;</code>.</li>
+        <li><strong>Uncertain Ownership:</strong> Use Azure Resource Graph or tags to trace the NIC’s history. Escalate to the subscription owner if needed.</li>
+        <li><strong>Public IP Still Incurring Costs:</strong> After disassociating, delete unused public IPs using <code>az network public-ip delete --name &lt;ip-name&gt; --resource-group &lt;resource-group&gt;</code>.</li>
+      </ul>
+
+      <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>
   </main>
 
