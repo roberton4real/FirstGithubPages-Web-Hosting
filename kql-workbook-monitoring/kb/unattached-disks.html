@@ -3,42 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Knowledge Base: unattached-disks – KQL Workbook</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+  <title>Knowledge Base: Identifying and Deleting Unattached Disks – KQL Workbook</title>
+
+  <!-- Highlight.js -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="../../../assets/css/kb_styles.css" />
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #0e1117;
       color: #e6edf3;
+      overflow-x: hidden;
     }
+
     header {
       text-align: center;
       padding: 4rem 1rem 2rem;
       background: #161b22;
       border-bottom: 1px solid #30363d;
     }
+
     header h1 {
       font-size: 2.8rem;
       margin-bottom: 0.5rem;
     }
+
     header p {
       font-size: 1.1rem;
       color: #8b949e;
     }
+
     .content {
       max-width: 900px;
       margin: 2rem auto;
       padding: 0 2rem;
     }
+
     section {
       margin-bottom: 3rem;
     }
+
     section h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       color: #58a6ff;
     }
+
+    section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      color: #c3d1d9;
+    }
+
     .code-block {
       background: #161b22;
       border: 1px solid #30363d;
@@ -48,19 +71,23 @@
       font-size: 0.9rem;
       line-height: 1.6;
     }
+
     pre code {
       color: #e6edf3;
     }
+
     .internal-link {
       display: inline-block;
       margin-top: 1rem;
-      color: #58a6ff;
+      color Provides a comprehensive guide for identifying and deleting unattached Azure Disks, including steps for using the Azure Portal, Azure CLI, and KQL queries, along with best practices and troubleshooting tips.: #58a6ff;
       text-decoration: none;
       border-bottom: 1px solid #58a6ff;
     }
+
     .internal-link:hover {
       color: #1f6feb;
     }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -68,22 +95,188 @@
       color: #8b949e;
       border-top: 1px solid #30363d;
     }
+
+    /* ✨ Floating Button Styling */
+    .floating-btn {
+      position: fixed;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(88, 166, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      color: #ffffff;
+      padding: 0.6rem 1.1rem;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      opacity: 1;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .floating-btn:hover,
+    .floating-btn:focus {
+      background: rgba(88, 166, 255, 0.25);
+      color: #58a6ff;
+      transform: translateY(-3px);
+      text-decoration: none;
+    }
+
+    .floating-btn i {
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      bottom: 1.5rem;
+      left: 1.5rem;
+    }
+
+    .home-btn {
+      top: 1.5rem;
+      right: 1.5rem;
+    }
   </style>
-    <link rel="stylesheet" href="../../../assets/css/kb_styles.css">
-<style id="kb-navigation-style">.kb-back-button-container{position:fixed;bottom:1.5rem;left:1.5rem;}.kb-back-button{padding:0.6rem 1.2rem;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:14px;border:1px solid rgba(255,255,255,0.2);color:#fff;font-weight:500;text-decoration:none;transition:background 0.3s,transform 0.2s;}.kb-back-button:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px);}.kb-top-right-link{position:fixed;top:1.5rem;right:1.5rem;padding:0.4rem 0.8rem;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border-radius:14px;border:1px solid rgba(255,255,255,0.2);color:#fff;font-weight:500;text-decoration:none;transition:background 0.3s,transform 0.2s;}.kb-top-right-link:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px);}</style>
 </head>
+
 <body>
-    <style>.kb-top-right-link:hover { color: #007bff; }</style><a href="../../../index.html" class="kb-top-right-link">New John Refuse</a>
-    <div class="kb-back-button-container"><a href="../../../index.html" class="kb-back-button">← Back to KQL Workbook</a></div>
+  <!-- ✨ Floating Buttons -->
+  <a href="../../../index.html" class="floating-btn back-btn">
+    <i class='bx bx-arrow-back'></i> KQL Workbook
+  </a>
+
+  <a href="../../../index.html" class="floating-btn home-btn">
+    <i class='bx bxs-home'></i> New John Refuse
+  </a>
+
   <header>
-    <h1>Knowledge Base: unattached-disks</h1>
-    <p>Documentation and insights for unattached-disks in the KQL Workbook</p>
+    <h1>Knowledge Base: Identifying and Deleting Unattached Disks</h1>
+    <p>Documentation and insights for identifying and deleting unattached Azure Disks in the KQL Workbook</p>
   </header>
 
   <main class="content">
     <section>
-      <h2>📘 KB: unattached-disks</h2>
-      <p>Details, best practices, and troubleshooting tips for unattached-disks will be added here.</p>
+      <h2>📘 KB: Identifying and Deleting Unattached Disks</h2>
+      <p>This guide helps users identify unattached disks in Azure, understand why they may be unassigned, and safely delete them to optimize costs and improve resource management.</p>
+
+      <h3>Why Delete Unattached Disks?</h3>
+      <ul>
+        <li><strong>Cost Optimization:</strong> Unattached disks incur storage costs even when not in use. Deleting these disks reduces unnecessary expenses.</li>
+        <li><strong>Resource Management:</strong> Removing unused disks declutters your Azure environment, making it easier to manage and monitor active resources.</li>
+        <li><strong>Security Considerations:</strong> Unused disks can pose security risks if they contain sensitive data. Deleting them ensures data isn't left exposed.</li>
+      </ul>
+
+      <h3>Steps to Identify and Delete Unattached Disks</h3>
+
+      <h4>1. Identify Unattached Disks</h4>
+      <p><strong>Using Azure Portal:</strong></p>
+      <ol>
+        <li>Navigate to the <a href="https://portal.azure.com" target="_blank">Azure Portal</a>.</li>
+        <li>Go to <strong>Disks</strong> under <strong>All Services</strong>.</li>
+        <li>Filter by <strong>Unattached</strong> to view disks not associated with any Virtual Machine (VM).</li>
+      </ol>
+
+      <p><strong>Using Azure CLI:</strong></p>
+      <p>List all unattached disks:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az disk list --query "[?managedBy==null].{Name:name, ResourceGroup:resourceGroup, Id:id, DiskSizeGB:diskSizeGb, Location:location}" -o table</code></pre>
+      </div>
+      <p>This command retrieves disks not attached to a VM, displaying their name, resource group, ID, size, and location.</p>
+
+      <p><strong>Using KQL (Azure Resource Graph):</strong></p>
+      <p>Query unattached disks using Azure Resource Graph Explorer:</p>
+      <div class="code-block">
+        <pre><code class="language-kql">Resources
+| where type == 'microsoft.compute/disks'
+| where isnull(properties.diskState) or properties.diskState == 'Unattached'
+| project name, resourceGroup, id, location, diskSizeGB=properties.diskSizeGB, tags
+| order by name asc
+</code></pre>
+      </div>
+      <p>This KQL query lists all unattached disks, including their name, resource group, ID, location, size, and tags, sorted by name.</p>
+
+      <h4>2. Evaluate the Disk's Purpose</h4>
+      <ul>
+        <li><strong>Check Usage History:</strong> Review Azure Activity Logs or documentation to determine if the disk was previously used by a VM, backup, or snapshot.</li>
+        <li><strong>Consult Teams:</strong> Confirm with resource owners or teams if the disk is needed for future deployments, disaster recovery, or archival purposes.</li>
+        <li><strong>Review Tags and Documentation:</strong> Check for tags or documentation indicating the disk’s purpose, such as project or owner details.</li>
+      </ul>
+      <p><strong>Azure CLI Command to Check Disk Details:</strong></p>
+      <div class="code-block">
+        <pre><code class="language-bash">az disk show --name <disk-name> --resource-group <resource-group></code></pre>
+      </div>
+      <p>Replace <code><disk-name></code> and <code><resource-group></code> with the appropriate values to view details like disk state, size, and tags.</p>
+
+      <h4>3. Backup Data if Necessary</h4>
+      <p>If the disk contains data that might be needed, create a snapshot or backup before deletion:</p>
+      <p><strong>Using Azure Portal:</strong></p>
+      <ol>
+        <li>Go to the unattached disk in the <strong>Disks</strong> section.</li>
+        <li>Click <strong>Create snapshot</strong>.</li>
+        <li>Specify a name, resource group, and storage type for the snapshot, then click <strong>Create</strong>.</li>
+      </ol>
+
+      <p><strong>Using Azure CLI:</strong></p>
+      <p>Create a snapshot of the disk:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az snapshot create \
+  --name <snapshot-name> \
+  --resource-group <resource-group> \
+  --source <disk-id></code></pre>
+      </div>
+      <p>Obtain the <code><disk-id></code> from the <code>az disk list</code> command output. Replace <code><snapshot-name></code> with a unique name for the snapshot.</p>
+
+      <p><strong>Verify Snapshot Creation:</strong></p>
+      <div class="code-block">
+        <pre><code class="language-bash">az snapshot list --resource-group <resource-group> -o table</code></pre>
+      </div>
+
+      <h4>4. Delete the Unattached Disk</h4>
+      <p><strong>Using Azure Portal:</strong></p>
+      <ol>
+        <li>Select the unattached disk from the list in the <strong>Disks</strong> section.</li>
+        <li>Click <strong>Delete</strong> and confirm the deletion.</li>
+      </ol>
+
+      <p><strong>Using Azure CLI:</strong></p>
+      <p>Delete the unattached disk:</p>
+      <div class="code-block">
+        <pre><code class="language-bash">az disk delete --name <disk-name> --resource-group <resource-group> --yes</code></pre>
+      </div>
+      <p>The <code>--yes</code> flag bypasses the confirmation prompt. Ensure the disk is unattached and no longer needed before running this command.</p>
+
+      <h4>5. Document and Communicate</h4>
+      <ul>
+        <li><strong>Record Deletions:</strong> Update change management systems or documentation to reflect the deletion, including the disk name, resource group, and reason for deletion.</li>
+        <li><strong>Inform Stakeholders:</strong> Notify relevant teams, especially if the disk was shared across projects or contained critical data.</li>
+      </ul>
+
+      <h3>Best Practices</h3>
+      <ul>
+        <li><strong>Tag Resources:</strong> Use tags to indicate the purpose, owner, or project associated with disks, making it easier to evaluate their necessity.</li>
+        <li><strong>Automate Cleanup:</strong> Use Azure Automation, PowerShell, or CLI scripts to periodically identify and flag unattached disks for review.</li>
+        <li><strong>Monitor Costs:</strong> Use Azure Cost Management to track storage costs and identify disks contributing to unexpected expenses.</li>
+        <li><strong>Regular Audits:</strong> Schedule monthly reviews of disk resources to identify and clean up unattached disks.</li>
+        <li><strong>Secure Snapshots:</strong> Store snapshots in a secure storage account with restricted access if they contain sensitive data.</li>
+      </ul>
+
+      <h3>Troubleshooting Tips</h3>
+      <ul>
+        <li><strong>Cannot Delete Disk:</strong> Ensure the disk is unattached and not locked. Check for resource locks using <code>az lock list --resource-group <resource-group></code>. Remove locks if necessary with <code>az lock delete</code>.</li>
+        <li><strong>Uncertain Ownership:</strong> Use Azure Resource Graph or tags to trace the disk’s history. Escalate to the subscription owner if ownership is unclear.</li>
+        <li><strong>Data Recovery Concerns:</strong> If a disk was deleted accidentally, check for snapshots or backups in the same resource group or storage account.</li>
+        <li><strong>High Storage Costs Post-Deletion:</strong> Verify that snapshots or incremental backups of the deleted disk are not incurring costs. Delete unused snapshots using <code>az snapshot delete --name <snapshot-name> --resource-group <resource-group></code>.</li>
+      </ul>
+
+      <h3>Additional Considerations</h3>
+      <ul>
+        <li><strong>Incremental Snapshots:</strong> Be aware that incremental snapshots may still reference the original disk’s data, affecting storage costs until fully deleted.</li>
+        <li><strong>Disk Encryption:</strong> If the disk was encrypted, ensure compliance with your organization’s data deletion policies before deletion.</li>
+        <li><strong>Cross-Region Disks:</strong> Verify the disk’s location when auditing, as unattached disks in different regions may be overlooked.</li>
+      </ul>
+
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>
   </main>
@@ -92,7 +285,24 @@
     © 2025 KQL Workbook. Built with code, coffee, and Azure love ☁️
   </footer>
 
+  <!-- Highlight.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
+
+  <!-- Optional: ScrollReveal (uncomment if used in your site) -->
+  <!--
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script>
+    ScrollReveal().reveal('.floating-btn', {
+      delay: 300,
+      distance: '20px',
+      origin: 'bottom',
+      duration: 700,
+      easing: 'ease-in-out',
+      opacity: 0,
+      interval: 200
+    });
+  </script>
+  -->
 </body>
 </html>
