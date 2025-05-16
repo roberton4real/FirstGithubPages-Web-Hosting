@@ -1,17 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SQL LRS Backup Migration</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Base: Migrate Hyperscale to General Purpose with LRS Backup</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: #0e1117; color: #e6edf3; }
+        header { text-align: center; padding: 4rem 1rem 2rem; background: #161b22; border-bottom: 1px solid #30363d; }
+        header h1 { font-size: 2.8rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1.1rem; color: #8b949e; }
+        .content { max-width: 900px; margin: 2rem auto; padding: 0 2rem; }
+        section { margin-bottom: 3rem; }
+        section h2 { font-size: 2rem; margin-bottom: 1rem; color: #58a6ff; }
+        section h3 { font-size: 1.5rem; margin-bottom: 0.75rem; color: #79c0ff; }
+        .code-block { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+        pre code { color: #e6edf3; }
+        .internal-link { display: inline-block; margin-top: 1rem; color: #58a6ff; text-decoration: none; border-bottom: 1px solid #58a6ff; }
+        .internal-link:hover { color: #1f6feb; }
+        footer { text-align: center; padding: 2rem; font-size: 0.85rem; color: #8b949e; border-top: 1px solid #30363d; }
+        ul { margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; }
+        .note { background-color: #22272e; border-left: 4px solid #58a6ff; padding: 10px 15px; margin: 15px 0; color: #c9d1d9; border-radius: 4px;}
+        .note strong { color: #58a6ff; }
+        .placeholder { color: #ffab70; font-style: italic; } /* Style for placeholders */
+    </style>
 </head>
 <body>
-    <main class="main">
-        <section class="section">
-            <h1>SQL LRS Backup Migration</h1>
-            <p>This is the project page for <strong>SQL LRS Backup Migration</strong>. Customize this content as needed.</p>
-            <a href="../index.html">← Back to Portfolio</a>
+    <header>
+        <h1>Knowledge Base: Migrate Hyperscale to General Purpose with LRS Backup</h1>
+        <p>Documentation and insights for migrating Azure SQL Hyperscale databases to General Purpose tier with Locally Redundant Storage (LRS) backups.</p>
+    </header>
+    <main class="content">
+
+        <section>
+            <h2>📘 Overview</h2>
+            <p><strong>Last Updated:</strong> May 16, 2025</p>
+            <p>This guide walks you through the process of migrating an Azure SQL Database from the Hyperscale service tier (often with Zone-Redundant Storage - ZRS - or Geo-Redundant Storage - GRS - for backups) to the General Purpose service tier with Locally Redundant Storage (LRS) for backups. This is particularly relevant for databases like a sandbox version of <span class="placeholder">&lt;production_sql_database_name&gt;</span> (e.g., <span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span>) within a sandbox subscription (e.g., <span class="placeholder">&lt;sandbox_subscription_id&gt;</span>).</p>
+            <p>The primary method detailed is using BACPAC export/import, as direct changes or reverse migrations from Hyperscale have significant limitations, especially for databases originally created in or recently migrated to Hyperscale.</p>
+        </section>
+
+        <section>
+            <h2>⚠️ Challenges with Hyperscale and LRS Backup Redundancy</h2>
+            <p>Attempting to change an existing Hyperscale database, such as <span class="placeholder">&lt;production_sql_database_name&gt;</span> on server <span class="placeholder">&lt;production_sql_server_name&gt;</span>, from its current backup storage redundancy (e.g., Zone-redundant) to LRS can be complex.</p>
+            <div class="note">
+                <strong>Important Note for Production Databases (e.g., <span class="placeholder">&lt;production_sql_database_name&gt;</span>):</strong>
+                Changing backup storage redundancy for an existing production Hyperscale database directly to LRS is often not straightforward. If you intend to duplicate the production setup and then change its backup storage redundancy to LRS, or modify the production instance itself, be aware that this process can be lengthier and <strong>requires confirmation and careful planning with your Solution Architect (SA) or relevant stakeholders before proceeding.</strong> This is due to the inherent architecture and limitations of the Hyperscale tier.
+            </div>
+
+            <h3>Example: Production Database Configuration</h3>
+            <p>Your production database (<span class="placeholder">&lt;production_sql_database_name&gt;</span>) might have a configuration similar to this, indicating it's Hyperscale with Zone-redundant backup storage:</p>
+            <div class="code-block"><pre><code class="json">{
+    "sku": {
+        "name": "HS_Gen5",
+        "tier": "Hyperscale",
+        "family": "Gen5",
+        "capacity": 2
+    },
+    "properties": {
+        "currentBackupStorageRedundancy": "Zone",
+        "requestedBackupStorageRedundancy": "Zone",
+        // ... other properties
+    },
+    "location": "<location>",
+    "name": "<production_sql_database_name>",
+    "type": "Microsoft.Sql/servers/databases"
+}</code></pre></div>
+
+            <h3>Limitations for Reverse Migration from Hyperscale</h3>
+            <p>Directly changing the service tier or backup redundancy for a Hyperscale database can be restricted. Reverse migration (moving from Hyperscale back to General Purpose or Business Critical) has specific limitations:</p>
+            <ul>
+                <li>Reverse migration is only available within 45 days of the original migration to Hyperscale.</li>
+                <li>Databases originally created in the Hyperscale service tier aren't eligible for reverse migration.
+                    <div class="note">If you encounter an error like <code>(ProvisioningDisabled) Hyperscale database '<span class="placeholder">&lt;database_name&gt;</span>' is ineligible for reverse migration. Database created as brand-new Hyperscale application.</code>, this confirms the limitation.</div>
+                </li>
+                <li>You can only reverse migrate to the General Purpose service tier. To move to other tiers like Business Critical, you must first migrate to General Purpose.</li>
+                <li>Reverse migration to databases with less than 2 vCores is not supported.</li>
+                <li>Direct reverse migration from/to an elastic pool isn't supported.</li>
+                <li>Geo-replication and named replicas must be disabled.</li>
+                <li>The database (allocated size) must fit into the target service tier.</li>
+            </ul>
+            <p>For databases that don't qualify for reverse migration, the primary method to move to a non-Hyperscale tier is via data movement technologies like BACPAC export/import.</p>
+
+            <h3>Common Reasons for Not Using LRS Initially (KB23911 Context)</h3>
+            <ul>
+                <li><strong>Database Backup Configuration:</strong> Manual setting to GRS or ZRS for business continuity.</li>
+                <li><strong>Availability Zone Requirements:</strong> Using ZRS or GRS for high availability or disaster recovery.</li>
+                <li><strong>Policy Enforcement:</strong> Organizational policies requiring GRS or ZRS for critical databases.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🛠️ Sandbox Environment Setup for Migration Testing</h2>
+            <p>To safely test the migration from Hyperscale (with its current backup redundancy) to General Purpose with LRS, you need to set up a sandbox environment. This involves creating a dedicated resource group and ensuring you have a policy exemption if your organization's policies restrict the creation of Hyperscale resources or certain backup configurations.</p>
+
+            <h3>Step 1: Create (or Verify) Correctly Named Sandbox Resource Group</h3>
+            <p>Ensure your sandbox resource group follows your organization's naming standards. For example, <span class="placeholder">&lt;sandbox_resource_group_name&gt;</span> in location <span class="placeholder">&lt;location&gt;</span> under subscription <span class="placeholder">&lt;sandbox_subscription_id&gt;</span>.</p>
+            <div class="code-block"><pre><code class="bash"># Set your variables
+AZ_SANDBOX_SUBSCRIPTION_ID="<sandbox_subscription_id>"
+AZ_SANDBOX_RG_NAME="<sandbox_resource_group_name>"
+AZ_LOCATION="<location>"
+AZ_TAG_COSTING="Business Technology" # Adjust tag as needed
+
+az account set --subscription $AZ_SANDBOX_SUBSCRIPTION_ID
+
+az group create --name $AZ_SANDBOX_RG_NAME \
+  --location $AZ_LOCATION \
+  --subscription $AZ_SANDBOX_SUBSCRIPTION_ID \
+  --tags Costing="$AZ_TAG_COSTING"
+
+# Verify
+az group show --name $AZ_SANDBOX_RG_NAME --subscription $AZ_SANDBOX_SUBSCRIPTION_ID</code></pre></div>
+
+            <h3>Step 2: Create Policy Exemption for Hyperscale (If Needed)</h3>
+            <p>If your Azure environment has policies that might prevent the creation of Hyperscale SQL databases or non-LRS backups in the sandbox, you'll need a policy exemption. Apply this to the <span class="placeholder">&lt;sandbox_resource_group_name&gt;</span>.</p>
+            <div class="code-block"><pre><code class="bash"># Set your variables
+AZ_POLICY_EXEMPTION_NAME="<policy_exemption_name>"
+# Example policy assignment path. Obtain your specific policy assignment ID.
+AZ_POLICY_ASSIGNMENT_PATH="<policy_assignment_path>" # e.g., /providers/Microsoft.Management/managementGroups/xxxx/providers/Microsoft.Authorization/policyAssignments/yyyy
+AZ_EXEMPTION_DESCRIPTION="Temporary exemption for sandbox Hyperscale testing with non-LRS backups"
+
+az policy exemption create \
+  --name $AZ_POLICY_EXEMPTION_NAME \
+  --policy-assignment $AZ_POLICY_ASSIGNMENT_PATH \
+  --exemption-category Waiver \
+  --scope "/subscriptions/$AZ_SANDBOX_SUBSCRIPTION_ID/resourceGroups/$AZ_SANDBOX_RG_NAME" \
+  --description "$AZ_EXEMPTION_DESCRIPTION"
+
+# Verify (you might need appropriate permissions to create/view exemptions)
+az policy exemption show --name $AZ_POLICY_EXEMPTION_NAME \
+  --scope "/subscriptions/$AZ_SANDBOX_SUBSCRIPTION_ID/resourceGroups/$AZ_SANDBOX_RG_NAME"</code></pre></div>
+            <div class="note">If you lack permissions to create policy exemptions, please contact your Azure administrator or the relevant authority (e.g., "New John" as mentioned in the context).</div>
+
+            <h3>Step 3: Deploy Source Hyperscale Database in Sandbox</h3>
+            <p>You can use ARM templates, Bicep, Terraform, or the Azure CLI/Portal to create your source Hyperscale SQL database in the sandbox resource group. Below is a conceptual Terraform example for creating a Hyperscale server and database (<span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span>) that you might want to migrate later.</p>
+            <div class="code-block"><pre><code class="hcl"># main.tf (Example Terraform configuration)
+provider "azurerm" {
+  features {}
+  subscription_id = "<sandbox_subscription_id>"
+}
+
+data "azurerm_resource_group" "sandbox" {
+  name = "<sandbox_resource_group_name>"
+}
+
+resource "azurerm_mssql_server" "source_hyperscale_server" {
+  name                         = "<sandbox_hyperscale_sql_server_name>"
+  resource_group_name          = data.azurerm_resource_group.sandbox.name
+  location                     = data.azurerm_resource_group.sandbox.location
+  version                      = "12.0"
+  administrator_login          = "<admin_login_name>"
+  administrator_login_password = "<admin_password_placeholder>" # Use a strong, unique password
+}
+
+resource "azurerm_mssql_firewall_rule" "source_azure_services_access" {
+  name                = "AllowAllAzureServices"
+  resource_group_name = data.azurerm_resource_group.sandbox.name
+  server_name         = azurerm_mssql_server.source_hyperscale_server.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
+resource "azurerm_mssql_database" "source_hyperscale_db" {
+  name           = "<sandbox_hyperscale_sql_database_name>"
+  server_id      = azurerm_mssql_server.source_hyperscale_server.id
+  sku_name       = "HS_Gen5_2" # Example Hyperscale SKU
+  zone_redundant = true        # Example: Starting with Zone-redundant backups
+  # For Hyperscale, backup_storage_redundancy is typically Zone or Geo by default
+  # and not directly set to LRS during creation in the same way as other tiers.
+}</code></pre></div>
+            <p>After applying this (or equivalent Azure CLI/Portal steps), you will have a Hyperscale database (<span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span> on server <span class="placeholder">&lt;sandbox_hyperscale_sql_server_name&gt;</span>) in your sandbox, ready for the migration test.</p>
+        </section>
+
+        <section>
+            <h2>🔄 Migration Process: Sandbox Hyperscale DB to General Purpose with LRS (BACPAC Method)</h2>
+            <p>This section details how to migrate your <span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span> from Hyperscale to General Purpose with LRS backups using the BACPAC export/import method. This is often the most reliable way for databases originally created as Hyperscale.</p>
+
+            <h3>0. Prerequisites for BACPAC Migration</h3>
+            <ul>
+                <li>Azure CLI installed and logged into the correct subscription: <code>az login</code> and <code>az account set --subscription <sandbox_subscription_id></code>.</li>
+                <li>Details of your existing sandbox Hyperscale server (<span class="placeholder">&lt;sandbox_hyperscale_sql_server_name&gt;</span>) and database (<span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span>).</li>
+                <li>Admin credentials for the source Hyperscale server.</li>
+            </ul>
+
+            <h3>1. Create (or Identify) an Azure Storage Account and Container for BACPAC</h3>
+            <p>You'll need a storage account to host the BACPAC file.</p>
+            <div class="code-block"><pre><code class="bash"># Variables for storage
+AZ_BACPAC_STORAGE_ACCOUNT="<bacpac_storage_account_name>" # Must be globally unique, lowercase letters and numbers
+AZ_BACPAC_CONTAINER="<bacpac_container_name>"
+AZ_SANDBOX_RG_NAME="<sandbox_resource_group_name>" # From previous step
+AZ_LOCATION="<location>" # From previous step
+
+# 1. Create the storage account (Standard_LRS is fine for this purpose)
+az storage account create --name $AZ_BACPAC_STORAGE_ACCOUNT \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --location $AZ_LOCATION \
+  --sku Standard_LRS
+
+# 2. Create a blob container
+az storage container create --name $AZ_BACPAC_CONTAINER \
+  --account-name $AZ_BACPAC_STORAGE_ACCOUNT \
+  --auth-mode login # Or use --account-key if preferred/needed by subsequent commands</code></pre></div>
+
+            <h3>2. Export the Sandbox Hyperscale Database to a BACPAC</h3>
+            <h4>2.1 Gather Required Info</h4>
+            <ul>
+                <li>Source Hyperscale Server name (no .database.windows.net): <span class="placeholder">&lt;sandbox_hyperscale_sql_server_name&gt;</span></li>
+                <li>Source Database name: <span class="placeholder">&lt;sandbox_hyperscale_sql_database_name&gt;</span></li>
+                <li>Admin credentials: <span class="placeholder">&lt;admin_login_name&gt;</span>, <span class="placeholder">&lt;admin_password_placeholder&gt;</span></li>
+            </ul>
+            <h4>2.2 Get Storage Account Key and Construct URI</h4>
+            <div class="code-block"><pre><code class="bash">STORAGE_KEY=$(az storage account keys list \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --account-name $AZ_BACPAC_STORAGE_ACCOUNT \
+  --query "[0].value" -o tsv)
+
+BACPAC_FILE_NAME="${AZ_SANDBOX_DB_NAME}.bacpac" # e.g., DataScienceAppLogsSandbox.bacpac
+STORAGE_URI="https://${AZ_BACPAC_STORAGE_ACCOUNT}.blob.core.windows.net/${AZ_BACPAC_CONTAINER}/${BACPAC_FILE_NAME}"
+</code></pre></div>
+            <h4>2.3 Run the Export Command</h4>
+            <div class="code-block"><pre><code class="bash"># Variables for export
+AZ_SOURCE_SERVER_NAME="<sandbox_hyperscale_sql_server_name>"
+AZ_SANDBOX_DB_NAME="<sandbox_hyperscale_sql_database_name>"
+AZ_SQL_ADMIN_USER="<admin_login_name>"
+AZ_SQL_ADMIN_PASSWORD="<admin_password_placeholder>" # Ensure this is the correct password
+
+# Ensure firewall allows Azure services to connect to the source server
+az sql server firewall-rule create \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --server $AZ_SOURCE_SERVER_NAME \
+  --name AllowAllWindowsAzureIps_Export \
+  --start-ip-address 0.0.0.0 \
+  --end-ip-address 0.0.0.0
+
+# Export command
+az sql db export \
+  --admin-user "$AZ_SQL_ADMIN_USER" \
+  --admin-password "$AZ_SQL_ADMIN_PASSWORD" \
+  --name "$AZ_SANDBOX_DB_NAME" \
+  --resource-group "$AZ_SANDBOX_RG_NAME" \
+  --server "$AZ_SOURCE_SERVER_NAME" \
+  --storage-key-type "StorageAccessKey" \
+  --storage-key "$STORAGE_KEY" \
+  --storage-uri "$STORAGE_URI"</code></pre></div>
+            <p>Wait for completion. The BACPAC file will be in your specified blob container.</p>
+
+            <h3>3. Create a New Azure SQL Server with Locally Redundant Backup</h3>
+            <p>This new server will host your General Purpose database and will be configured for LRS backups.</p>
+            <div class="code-block"><pre><code class="bash"># Variables for new LRS server
+AZ_NEW_LRS_SERVER_NAME="<new_lrs_sql_server_name>"
+AZ_NEW_SQL_ADMIN_USER="<admin_login_name>" # Can be same or different
+AZ_NEW_SQL_ADMIN_PASSWORD="<admin_password_placeholder>" # Choose a new strong password
+
+az sql server create \
+  --name $AZ_NEW_LRS_SERVER_NAME \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --location $AZ_LOCATION \
+  --admin-user "$AZ_NEW_SQL_ADMIN_USER" \
+  --admin-password "$AZ_NEW_SQL_ADMIN_PASSWORD" \
+  --backup-storage-redundancy Local # Explicitly set LRS for backups
+
+# Add firewall rule to allow Azure services (e.g., for import)
+az sql server firewall-rule create \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --server $AZ_NEW_LRS_SERVER_NAME \
+  --name AllowAllWindowsAzureIps_Import \
+  --start-ip-address 0.0.0.0 \
+  --end-ip-address 0.0.0.0
+
+# Optionally, add your client IP for SSMS/ADS access
+# MY_IP=$(curl -s ifconfig.me)
+# az sql server firewall-rule create \
+#   --resource-group $AZ_SANDBOX_RG_NAME \
+#   --server $AZ_NEW_LRS_SERVER_NAME \
+#   --name AllowMyClientIP \
+#   --start-ip-address $MY_IP \
+#   --end-ip-address $MY_IP</code></pre></div>
+
+            <h3>4. Import the BACPAC into a Non-Hyperscale Tier on the New LRS Server</h3>
+            <p>Now, import the BACPAC to the new server, specifying General Purpose tier.</p>
+            <div class="code-block"><pre><code class="bash"># Variables for import
+AZ_NEW_LRS_DB_NAME="<new_lrs_sql_database_name>" # e.g., DataScienceAppLogsSandboxLRS
+# STORAGE_URI and STORAGE_KEY are from Step 2.2
+
+# Option 1: Direct import (creates the DB during import)
+az sql db import \
+  --admin-user "$AZ_NEW_SQL_ADMIN_USER" \
+  --admin-password "$AZ_NEW_SQL_ADMIN_PASSWORD" \
+  --name "$AZ_NEW_LRS_DB_NAME" \
+  --resource-group "$AZ_SANDBOX_RG_NAME" \
+  --server "$AZ_NEW_LRS_SERVER_NAME" \
+  --storage-key "$STORAGE_KEY" \
+  --storage-key-type "StorageAccessKey" \
+  --storage-uri "$STORAGE_URI" \
+  --edition GeneralPurpose \
+  --family Gen5 \
+  --capacity 2 # Example: GP_Gen5_2. Adjust service objective as needed.
+
+# Option 2: Pre-create DB then import (sometimes helps with specific configurations)
+# az sql db create --resource-group $AZ_SANDBOX_RG_NAME \
+#   --server $AZ_NEW_LRS_SERVER_NAME \
+#   --name $AZ_NEW_LRS_DB_NAME \
+#   --edition GeneralPurpose \
+#   --family Gen5 \
+#   --capacity 2 \
+#   --backup-storage-redundancy Local # Ensure LRS if creating first
+# Then run `az sql db import` as above, targetting the existing $AZ_NEW_LRS_DB_NAME.
+</code></pre></div>
+            <p><strong>Important Parameters:</strong></p>
+            <ul>
+                <li><code>--edition GeneralPurpose</code>: Specifies the target tier.</li>
+                <li><code>--family Gen5 --capacity 2</code> (or <code>--service-objective GP_Gen5_2</code>): Defines performance. Adjust as needed.</li>
+                <li>The <code>--backup-storage-redundancy Local</code> was set on the server. For new databases on this server, they should inherit this or it can be explicitly set if creating the DB first.</li>
+            </ul>
+            <p>This command may take some time depending on the BACPAC size.</p>
+
+            <h3>5. Confirm the New Database & Update Application (If Applicable)</h3>
+            <p>Once the import finishes, verify the new database.</p>
+            <div class="code-block"><pre><code class="bash">az sql db show \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --server $AZ_NEW_LRS_SERVER_NAME \
+  --name $AZ_NEW_LRS_DB_NAME \
+  --query "{Name:name, Edition:sku.tier, ServiceObjective:currentServiceObjectiveName, BackupRedundancy:currentBackupStorageRedundancy, Status:status}" -o table</code></pre></div>
+            <p>You should see "Edition": "GeneralPurpose" and "BackupRedundancy": "Local".</p>
+            <p>Connect to the new database using SSMS, Azure Data Studio, or your application with the new server details (<span class="placeholder">&lt;new_lrs_sql_server_name&gt;.database.windows.net</span>) and database name (<span class="placeholder">&lt;new_lrs_sql_database_name&gt;</span>) to test.</p>
+             <div class="code-block"><pre><code class="sql">-- Example verification query in SSMS/ADS
+-- Connect to <new_lrs_sql_server_name>.database.windows.net
+-- Database: <new_lrs_sql_database_name>
+SELECT * FROM <sample_table_name>; -- Replace with an actual table from your database
+</code></pre></div>
+
+            <h3>6. (Optional) Clean Up Old Sandbox Hyperscale Resources</h3>
+            <p>After verifying everything works as expected with the new LRS General Purpose database, you can delete the original sandbox Hyperscale database and server if no longer needed.</p>
+            <div class="code-block"><pre><code class="bash"># Delete old sandbox Hyperscale database
+az sql db delete \
+  --resource-group $AZ_SANDBOX_RG_NAME \
+  --server $AZ_SOURCE_SERVER_NAME \
+  --name $AZ_SANDBOX_DB_NAME \
+  --yes
+
+# Optionally, delete the old server if no other databases are on it
+# az sql server delete \
+#   --resource-group $AZ_SANDBOX_RG_NAME \
+#   --name $AZ_SOURCE_SERVER_NAME \
+#   --yes</code></pre></div>
+        </section>
+
+        <section>
+            <h2>🚑 Troubleshooting Tips</h2>
+            <ul>
+                <li><strong>Firewall Rules:</strong> Ensure Azure services and/or your client IP are allowed through the SQL server firewall for both source (export) and target (import) servers.</li>
+                <li><strong>Large Databases:</strong> Export/import of large databases can take a significant amount of time. Consider using <code>SqlPackage.exe</code> directly for more control or if CLI commands time out. Ensure your Azure CLI environment (e.g., Cloud Shell, local machine) has adequate resources and timeout settings.</li>
+                <li><strong>Service Tier Constraints:</strong> If BACPAC import fails, confirm the target tier (e.g., GP_Gen5_2) supports the database size. Check Azure SQL Database resource limits.</li>
+                <li><strong>Permissions:</strong> Ensure the credentials used for export/import have the necessary database (e.g., db_owner on source for export) and server-level permissions.</li>
+                <li><strong>Portal vs. CLI:</strong> You can also import the BACPAC via the Azure Portal (“SQL databases” → “Import database”) if you prefer a GUI, but CLI is better for automation.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>🏁 Final Recap</h2>
+            <p>To migrate a brand-new Hyperscale database to General Purpose with LRS backups (bypassing reverse migration limitations):</p>
+            <ol>
+                <li><strong>Set up Sandbox:</strong> Create resource group and policy exemption (if needed). Deploy source Hyperscale DB.</li>
+                <li><strong>Create Storage:</strong> Set up an Azure Storage Account and container for the BACPAC.</li>
+                <li><strong>Export:</strong> Use <code>az sql db export</code> to create a BACPAC of the source Hyperscale database.</li>
+                <li><strong>Create New LRS Server:</strong> Create a new Azure SQL Server with <code>--backup-storage-redundancy Local</code>.</li>
+                <li><strong>Import:</strong> Use <code>az sql db import</code> to restore the BACPAC to the new LRS server, specifying <code>--edition GeneralPurpose</code>.</li>
+                <li><strong>Verify & Clean Up:</strong> Confirm the new database configuration and functionality, then decommission old sandbox resources if appropriate.</li>
+            </ol>
+            <p>This procedure allows you to effectively move your database workload to a different service tier and backup storage redundancy configuration when direct modifications are not feasible.</p>
+            <a class="internal-link" href="../index.html">← Back to KQL Workbook (Example Link)</a>
         </section>
     </main>
+    <footer>
+        © <script>document.write(new Date().getFullYear())</script> KQL Workbook. Built with code, coffee, and Azure love ☁️
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>
