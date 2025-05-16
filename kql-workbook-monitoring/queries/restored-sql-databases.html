@@ -108,7 +108,46 @@
       </div>
       <p>The KQL query for <strong>restored-sql-databases</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for restored-sql-databases will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type =~ 'microsoft.sql/servers/databases'
+| where isnotempty(properties.earliestRestoreDate)
+| extend earliestRestoreDate = properties.earliestRestoreDate
+| extend yearPattern = extract("20[0-4][0-9]|2050", 0, name)
+| where isnotempty(yearPattern)
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend skuName = tostring(sku.name), skuTier = tostring(sku.tier)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Application'] = tostring(tags.Application),
+    ['Department'] = tostring(tags.Department),
+    ['Sku Tier'] = skuTier,
+    ['Earliest Restore Date'] = earliestRestoreDate, 
+    ['Creation Date'] = properties.creationDate,      
+    ['Resource Link'] = ResourceLink</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

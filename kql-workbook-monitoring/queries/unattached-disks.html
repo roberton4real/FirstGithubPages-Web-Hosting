@@ -108,7 +108,36 @@
       </div>
       <p>The KQL query for <strong>unattached-disks</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for unattached-disks will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type == "microsoft.compute/disks"
+| extend diskState = tostring(properties.diskState)
+| where diskState == "Unattached"
+| extend diskSizeGB = tostring(properties.diskSizeGB)
+| extend timeCreated = tostring(properties.timeCreated)
+| extend tenantId = tostring(tenantId)
+| extend subscriptionName = case(
+    subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+    subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+    subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+    subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+    subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+    subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+    subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+    subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+    "Unknown"
+)
+| extend ResourceLink = strcat("https://portal.azure.com/#@", tenantId, "/resource", id)
+| project
+    ['Name'] = name,
+    ['Resource Group'] = resourceGroup,
+    ['Location'] = location,
+    ['Size (GB)'] = diskSizeGB,
+    ['Time Created'] = timeCreated,
+    ['Subscription Name'] = subscriptionName,
+    ['Subscription ID'] = subscriptionId,
+    ['Disk State'] = diskState,
+    ['Resource Link'] = ResourceLink
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

@@ -108,7 +108,46 @@
       </div>
       <p>The KQL query for <strong>azure-vms-that-are-deallocated</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vms-that-are-deallocated will be added here...</code></pre>
+        <pre><code class="kql">resources 
+| where type == 'microsoft.compute/virtualmachines'
+| where isnotempty(properties.extended.instanceView) // Ensure instanceView is present
+| extend powerState = tostring(properties.extended.instanceView.powerState.code)
+| where powerState == 'PowerState/deallocated' // Select only deallocated VMs
+| extend VMDeallocationAllowedTag = tostring(tags['VMDeallocationAllowed'])
+| where isnull(VMDeallocationAllowedTag) or VMDeallocationAllowedTag in~ ('false') // Only include VMs without the tag or with it set to 'false'
+| where subscriptionId in (
+    "SUBSCRIPTION-ID-001",
+    "SUBSCRIPTION-ID-002",
+    "SUBSCRIPTION-ID-003",
+    "SUBSCRIPTION-ID-004",
+    "SUBSCRIPTION-ID-005",
+    "SUBSCRIPTION-ID-006",
+    "SUBSCRIPTION-ID-007",
+    "SUBSCRIPTION-ID-008"
+)
+| extend subscriptionName = case(
+    subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+    subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+    subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+    subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+    subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+    subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+    subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+    subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['VM Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Application'] = tostring(tags.Application),
+    ['Department'] = tostring(tags.Department),
+    ['Power State'] = powerState,
+    ['Deallocation Allowed Tag'] = VMDeallocationAllowedTag,
+    ['Resource Link'] = ResourceLink
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

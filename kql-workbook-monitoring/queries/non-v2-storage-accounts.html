@@ -108,7 +108,53 @@
       </div>
       <p>The KQL query for <strong>non-v2-storage-accounts</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for non-v2-storage-accounts will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type == "microsoft.storage/storageaccounts"
+| extend storageKind = tostring(kind)
+| where storageKind != "StorageV2"  // Exclude V2 accounts as intended
+| extend skuName = parse_json(sku).name, skuTier = parse_json(sku).tier  
+| where subscriptionId in (
+    "00000000-aaaa-bbbb-cccc-111111111111",
+    "00000000-aaaa-bbbb-cccc-222222222222",
+    "00000000-aaaa-bbbb-cccc-333333333333",
+    "00000000-aaaa-bbbb-cccc-444444444444",
+    "00000000-aaaa-bbbb-cccc-555555555555",
+    "00000000-aaaa-bbbb-cccc-666666666666",
+    "00000000-aaaa-bbbb-cccc-777777777777",
+    "00000000-aaaa-bbbb-cccc-888888888888"
+)
+| extend subscriptionName = case(
+    subscriptionId == "00000000-aaaa-bbbb-cccc-111111111111", "Subscription A",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-222222222222", "Subscription B",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-333333333333", "Subscription C",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-444444444444", "Subscription D",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-555555555555", "Subscription E",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-666666666666", "Subscription F",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-777777777777", "Subscription G",
+    subscriptionId == "00000000-aaaa-bbbb-cccc-888888888888", "Subscription H",
+    "Unknown"  
+)
+| extend isADF = (name contains "adf" or name contains "adftutorial") 
+| extend isDatabricks = (tostring(tags["databricks-environment"]) == "true") 
+| extend hasDFS = properties.primaryEndpoints.dfs != ""  
+| extend isV1 = (storageKind == "Storage")
+| where not(isADF) and not(isDatabricks) and not(hasDFS)  
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)  
+| extend AccountKind = iff(isV1, "V1", storageKind)  // If Is V1 is true, set to "V1", else use storageKind
+| project
+    ['Name'] = name,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Application'] = tostring(tags.Application),
+    ['Department'] = tostring(tags.Department),
+    ['Storage Account Type'] = storageKind,
+    ['Is V1'] = isV1,
+    ['Account Kind'] = AccountKind,
+    ['Sku Name'] = skuName,
+    ['Sku Tier'] = skuTier,
+    ['Resource Link'] = ResourceLink
+| order by ['Storage Account Type'], ['Name']</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

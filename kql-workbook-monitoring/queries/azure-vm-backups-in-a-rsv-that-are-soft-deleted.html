@@ -108,7 +108,60 @@
       </div>
       <p>The KQL query for <strong>azure-vm-backups-in-a-rsv-that-are-soft-deleted</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vm-backups-in-a-rsv-that-are-soft-deleted will be added here...</code></pre>
+        <pre><code class="kql">recoveryservicesresources
+| where type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems'
+| extend vaultName = case(
+    type =~ 'microsoft.dataprotection/backupVaults/backupInstances',
+        split(split(id, '/Microsoft.DataProtection/backupVaults/')[1], '/')[0],
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+        split(split(id, '/Microsoft.RecoveryServices/vaults/')[1], '/')[0],
+    '--'
+)
+| extend dataSourceType = case(
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+        properties.backupManagementType,
+    type =~ 'microsoft.dataprotection/backupVaults/backupInstances',
+        properties.dataSourceSetInfo.datasourceType,
+    '--'
+)
+| extend isSoftDeleted = properties.isScheduledForDeferredDelete
+| extend softDeleteRetentionPeriod = toint(properties.softDeleteRetentionPeriod)
+| where isSoftDeleted == true                          // Only soft-deleted backups
+| where dataSourceType in~ ('AzureIaasVM')             // Filter for Azure IaaS VMs
+| order by name asc
+| where subscriptionId in (
+    "SUBSCRIPTION-ID-001",
+    "SUBSCRIPTION-ID-002",
+    "SUBSCRIPTION-ID-003",
+    "SUBSCRIPTION-ID-004",
+    "SUBSCRIPTION-ID-005",
+    "SUBSCRIPTION-ID-006",
+    "SUBSCRIPTION-ID-007",
+    "SUBSCRIPTION-ID-008"
+)
+| extend subscriptionName = case(
+    subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+    subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+    subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+    subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+    subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+    subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+    subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+    subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+    "Unknown"
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| extend vmName = split(name, ';')[3]  // Extract VM name from backup item name
+| project
+    ['VM Name'] = vmName,
+    ['Vault Name'] = vaultName,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Is Soft Deleted'] = tostring(isSoftDeleted),
+    ['Soft Delete Retention (days)'] = softDeleteRetentionPeriod,
+    ['Resource Link'] = ResourceLink
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

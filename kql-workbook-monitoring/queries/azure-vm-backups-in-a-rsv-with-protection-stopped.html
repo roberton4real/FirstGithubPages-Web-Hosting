@@ -108,7 +108,82 @@
       </div>
       <p>The KQL query for <strong>azure-vm-backups-in-a-rsv-with-protection-stopped</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vm-backups-in-a-rsv-with-protection-stopped will be added here...</code></pre>
+        <pre><code class="kql">recoveryservicesresources
+| where type in~ (
+    'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems'
+)
+| extend policy = properties.policyInfo.policyId
+| extend vaultName = case(
+    type in~ (
+        'microsoft.dataprotection/backupVaults/backupInstances',
+        'microsoft.dataprotection/backupVaults/deletedBackupInstances'
+    ), split(split(id, '/Microsoft.DataProtection/backupVaults/')[1], '/')[0],
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    split(split(id, '/Microsoft.RecoveryServices/vaults/')[1], '/')[0], '--')
+| extend vaultId = case(
+    type in~ (
+        'microsoft.dataprotection/backupVaults/backupInstances',
+        'microsoft.dataprotection/backupVaults/deletedBackupInstances'
+    ), tolower(split(id, '/backupInstances/')[0]),
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    tolower(split(id, '/backupFabrics/')[0]), '--')
+| extend dataSourceType = case(
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    strcat(properties.backupManagementType, '/', properties.workloadType),
+    type in~ (
+        'microsoft.dataprotection/backupVaults/backupInstances',
+        'microsoft.dataprotection/backupVaults/deletedBackupInstances'
+    ), properties.dataSourceInfo.datasourceType, '--')
+| extend friendlyName = properties.friendlyName
+| extend dsResourceGroup = split(split(properties.dataSourceInfo.resourceID, '/resourceGroups/')[1], '/')[0]
+| extend dsSubscription = split(split(properties.dataSourceInfo.resourceID, '/subscriptions/')[1], '/')[0]
+| extend resourceId = tolower(tostring(properties.dataSourceSetInfo.resourceID))
+| extend lastRestorePoint = case(isnull(properties.lastRecoveryPoint), properties.lastBackupTime, properties.lastRecoveryPoint)
+| extend primaryLocation = properties.dataSourceInfo.resourceLocation
+| extend parentType = properties.parentType
+| extend instanceName = case(isnotnull(properties.serverName), strcat(properties.serverName, '/', properties.parentName), 'NA')
+| extend policyName = case(
+    type in~ (
+        'microsoft.dataprotection/backupVaults/backupInstances',
+        'microsoft.dataprotection/backupVaults/deletedBackupInstances'
+    ), extract(@'([^/]*)/backupPolicies/([^/]*)', 2, tostring(policy)),
+    type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',
+    properties.policyInfo.name, '--')
+| extend protectionState = properties.currentProtectionState
+| extend managedIdentity = case((properties.identityDetails.useSystemAssignedIdentity == false), 'userassigned', 'systemassigned')
+| project id, name, type, resourceGroup, vaultName, friendlyName, instanceName, subscriptionId, dataSourceType, protectionState, policyName, primaryLocation, lastRestorePoint, properties, dsResourceGroup, dsSubscription, location, parentType, managedIdentity, resourceId
+| where (protectionState in~ ('ProtectionStopped')) and (dataSourceType in~ ('AzureIaasVM/VM'))
+| where subscriptionId in (
+    "SUBSCRIPTION-ID-001",
+    "SUBSCRIPTION-ID-002",
+    "SUBSCRIPTION-ID-003",
+    "SUBSCRIPTION-ID-004",
+    "SUBSCRIPTION-ID-005",
+    "SUBSCRIPTION-ID-006",
+    "SUBSCRIPTION-ID-007",
+    "SUBSCRIPTION-ID-008"
+)
+| extend subscriptionName = case(
+    subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+    subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+    subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+    subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+    subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+    subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+    subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+    subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+    "Unknown" // Default value if no match is found
+)
+| extend ResourceLink = strcat('https://portal.azure.com/#@', '/resource', id)
+| project
+    ['VM Name'] = friendlyName,
+    ['Location'] = location,
+    ['Resource Group'] = resourceGroup,
+    ['Subscription Name'] = subscriptionName,
+    ['Last Restore Point'] = lastRestorePoint,
+    ['Protection State'] = protectionState,
+    ['Resource Link'] = ResourceLink
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

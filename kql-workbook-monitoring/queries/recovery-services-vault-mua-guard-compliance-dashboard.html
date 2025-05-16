@@ -108,7 +108,47 @@
       </div>
       <p>The KQL query for <strong>recovery-services-vault-mua-guard-compliance-dashboard</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for recovery-services-vault-mua-guard-compliance-dashboard will be added here...</code></pre>
+        <pre><code class="kql">resources
+| where type == 'microsoft.recoveryservices/vaults'
+| extend 
+    GuardName         = extract('resourceGuards/([^/]+)', 1, tostring(properties.resourceGuardResourceId)),
+    MUA               = tostring(properties.securitySettings.multiUserAuthorization),
+    SoftDeleteState   = tostring(properties.securitySettings.softDeleteSettings.softDeleteState),
+    Redundancy        = tostring(properties.redundancySettings.standardTierStorageRedundancy)
+| join kind=inner (
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    | project subscriptionId, subscriptionName = case(
+        subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+        subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+        subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+        subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+        subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+        subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+        subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+        subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+        "Unknown"
+    )
+) on subscriptionId
+| extend 
+    ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project
+    ['Vault Name']             = name,
+    ['Type']                   = type,
+    ['Location']               = location,
+    ['Multi User Authorization'] = MUA,
+    ['Resource Group']         = resourceGroup,
+    ['Subscription Name']      = subscriptionName,
+    ['SKU']                    = tostring(sku.name),
+    ['Application']            = tostring(tags['Application']),
+    ['Department']             = tostring(tags['Department']),
+    ['Costing']                = tostring(tags['Costing']),
+    ['SoftDeleteState']        = SoftDeleteState,
+    ['Redundancy']             = Redundancy,
+    ['Resource Guard']         = GuardName,
+    ['Resource Link']          = ResourceLink
+| order by ['Vault Name']
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>

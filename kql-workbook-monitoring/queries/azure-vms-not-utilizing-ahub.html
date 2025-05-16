@@ -108,7 +108,41 @@
       </div>
       <p>The KQL query for <strong>azure-vms-not-utilizing-ahub</strong> is provided below.</p>
       <div class="code-block">
-        <pre><code class="kql">// KQL query for azure-vms-not-utilizing-ahub will be added here...</code></pre>
+        <pre><code class="kql">Resources
+| where type =~ 'Microsoft.Compute/virtualMachines'
+| where isnull(properties.['licenseType']) or properties.['licenseType'] == 'None'  // Include null or "None"
+| where subscriptionId in (
+    "SUBSCRIPTION-ID-001",
+    "SUBSCRIPTION-ID-002",
+    "SUBSCRIPTION-ID-003",
+    "SUBSCRIPTION-ID-004",
+    "SUBSCRIPTION-ID-005",
+    "SUBSCRIPTION-ID-006",
+    "SUBSCRIPTION-ID-007",
+    "SUBSCRIPTION-ID-008"
+)
+| extend subscriptionName = case(
+    subscriptionId == "SUBSCRIPTION-ID-001", "Environment-A",
+    subscriptionId == "SUBSCRIPTION-ID-002", "Environment-B",
+    subscriptionId == "SUBSCRIPTION-ID-003", "Environment-C",
+    subscriptionId == "SUBSCRIPTION-ID-004", "Environment-D",
+    subscriptionId == "SUBSCRIPTION-ID-005", "Environment-E",
+    subscriptionId == "SUBSCRIPTION-ID-006", "Environment-F",
+    subscriptionId == "SUBSCRIPTION-ID-007", "Environment-G",
+    subscriptionId == "SUBSCRIPTION-ID-008", "Environment-H",
+    "Unknown"
+)
+| extend extensions = properties.extensions,
+         osType = tostring(properties.storageProfile.osDisk.osType),
+         ResourceLink = strcat('https://portal.azure.com/#@', tenantId, '/resource', id)
+| project 
+    ['VM Name'] = name, 
+    ['Resource Group'] = resourceGroup, 
+    ['Location'] = location, 
+    ['Subscription'] = subscriptionName, 
+    ['OS Type'] = osType,
+    ['Resource Link'] = ResourceLink
+</code></pre>
       </div>
       <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
     </section>
