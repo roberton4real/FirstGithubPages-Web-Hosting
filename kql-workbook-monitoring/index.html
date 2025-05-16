@@ -68,10 +68,31 @@
     .tab-content.active {
       display: block;
     }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
     section h2 {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin: 0;
       color: #58a6ff;
+    }
+    .readme-btn {
+      padding: 0.5rem 1rem;
+      background: #161b22;
+      color: #58a6ff;
+      border: 1px solid #58a6ff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background 0.3s, color 0.3s, transform 0.2s;
+    }
+    .readme-btn:hover {
+      background: #58a6ff;
+      color: #0e1117;
+      transform: translateY(-2px);
     }
     .table-responsive {
       width: 100%;
@@ -144,8 +165,16 @@
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
       }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
       section h2 {
         font-size: 1.5rem;
+      }
+      .readme-btn {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
       }
       table {
         min-width: unset;
@@ -183,7 +212,10 @@
     <!-- SQL Databases -->
     <div class="tab-content active" id="sql-databases">
       <section>
-        <h2>SQL Databases</h2>
+        <div class="section-header">
+          <h2>SQL Databases</h2>
+          <a href="read-me/index.html" class="readme-btn">Read Me</a>
+        </div>
         <p>Queries for monitoring and optimizing SQL database resources in Azure.</p>
         <div class="table-responsive">
           <table>
@@ -232,7 +264,10 @@
     <!-- Storage Accounts -->
     <div class="tab-content" id="storage-accounts">
       <section>
-        <h2>Storage Accounts</h2>
+        <div class="section-header">
+          <h2>Storage Accounts</h2>
+          <a href="read-me/index.html" class="readme-btn">Read Me</a>
+        </div>
         <p>Queries for identifying and managing Azure Storage Account configurations.</p>
         <div class="table-responsive">
           <table>
@@ -246,7 +281,7 @@
             <tbody>
               <tr>
                 <td><a class="internal-link" onclick="loadQuery('queries/storage-accounts-not-lrs.html')">Storage Accounts Not LRS</a></td>
-                <td><a class="internal-link" href="-KB/storage-accounts-not-lrs.html">View KB</a></td>
+                <td><a class="internal-link" href="kb/storage-accounts-not-lrs.html">View KB</a></td>
                 <td>May 15, 2025</td>
               </tr>
             </tbody>
@@ -261,7 +296,10 @@
     <!-- Unused Resources -->
     <div class="tab-content" id="unused-resources">
       <section>
-        <h2>Unused Resources</h2>
+        <div class="section-header">
+          <h2>Unused Resources</h2>
+          <a href="read-me/index.html" class="readme-btn">Read Me</a>
+        </div>
         <p>Queries to identify and clean up unused Azure resources.</p>
         <div class="table-responsive">
           <table>
@@ -305,7 +343,10 @@
     <!-- Virtual Machines -->
     <div class="tab-content" id="virtual-machines">
       <section>
-        <h2>Virtual Machines</h2>
+        <div class="section-header">
+          <h2>Virtual Machines</h2>
+          <a href="read-me/index.html" class="readme-btn">Read Me</a>
+        </div>
         <p>Queries for managing and optimizing Azure Virtual Machine resources.</p>
         <div class="table-responsive">
           <table>
