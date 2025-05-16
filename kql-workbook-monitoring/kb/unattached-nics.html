@@ -3,42 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Knowledge Base: unattached-nics – KQL Workbook</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet">
+  <title>Knowledge Base: azure-vm-backups-in-a-rsv-that-are-soft-deleted – KQL Workbook</title>
+
+  <!-- Highlight.js -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" rel="stylesheet" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="../../../assets/css/kb_styles.css" />
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #0e1117;
       color: #e6edf3;
+      overflow-x: hidden;
     }
+
     header {
       text-align: center;
       padding: 4rem 1rem 2rem;
       background: #161b22;
       border-bottom: 1px solid #30363d;
     }
+
     header h1 {
       font-size: 2.8rem;
       margin-bottom: 0.5rem;
     }
+
     header p {
       font-size: 1.1rem;
       color: #8b949e;
     }
+
     .content {
       max-width: 900px;
       margin: 2rem auto;
       padding: 0 2rem;
     }
+
     section {
       margin-bottom: 3rem;
     }
+
     section h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       color: #58a6ff;
     }
+
     .code-block {
       background: #161b22;
       border: 1px solid #30363d;
@@ -48,19 +65,11 @@
       font-size: 0.9rem;
       line-height: 1.6;
     }
+
     pre code {
       color: #e6edf3;
     }
-    .internal-link {
-      display: inline-block;
-      margin-top: 1rem;
-      color: #58a6ff;
-      text-decoration: none;
-      border-bottom: 1px solid #58a6ff;
-    }
-    .internal-link:hover {
-      color: #1f6feb;
-    }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -68,19 +77,71 @@
       color: #8b949e;
       border-top: 1px solid #30363d;
     }
+
+    /* ✨ Floating Button Styling */
+    .floating-btn {
+      position: fixed;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(88, 166, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      color: #ffffff;
+      padding: 0.6rem 1.1rem;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      opacity: 1;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .floating-btn:hover,
+    .floating-btn:focus {
+      background: rgba(88, 166, 255, 0.25);
+      color: #58a6ff;
+      transform: translateY(-3px);
+      text-decoration: none;
+    }
+
+    .floating-btn i {
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      bottom: 1.5rem;
+      left: 1.5rem;
+    }
+
+    .home-btn {
+      top: 1.5rem;
+      right: 1.5rem;
+    }
   </style>
 </head>
+
 <body>
+  <!-- ✨ Floating Buttons -->
+  <a href="../../../index.html" class="floating-btn back-btn">
+    <i class='bx bx-arrow-back'></i> KQL Workbook
+  </a>
+
+  <a href="../../../index.html" class="floating-btn home-btn">
+    <i class='bx bxs-home'></i> New John Refuse
+  </a>
+
   <header>
-    <h1>Knowledge Base: unattached-nics</h1>
-    <p>Documentation and insights for unattached-nics in the KQL Workbook</p>
+    <h1>Knowledge Base: azure-vm-backups-in-a-rsv-that-are-soft-deleted</h1>
+    <p>Documentation and insights for azure-vm-backups-in-a-rsv-that-are-soft-deleted in the KQL Workbook</p>
   </header>
 
   <main class="content">
     <section>
-      <h2>📘 KB: unattached-nics</h2>
-      <p>Details, best practices, and troubleshooting tips for unattached-nics will be added here.</p>
-      <a class="internal-link" href="../index.html">Back to KQL Workbook</a>
+      <h2>📘 KB: azure-vm-backups-in-a-rsv-that-are-soft-deleted</h2>
+      <p>Details, best practices, and troubleshooting tips for azure-vm-backups-in-a-rsv-that-are-soft-deleted will be added here.</p>
     </section>
   </main>
 
@@ -88,7 +149,24 @@
     © 2025 KQL Workbook. Built with code, coffee, and Azure love ☁️
   </footer>
 
+  <!-- Highlight.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
+
+  <!-- Optional: ScrollReveal (uncomment if used in your site) -->
+  <!--
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script>
+    ScrollReveal().reveal('.floating-btn', {
+      delay: 300,
+      distance: '20px',
+      origin: 'bottom',
+      duration: 700,
+      easing: 'ease-in-out',
+      opacity: 0,
+      interval: 200
+    });
+  </script>
+  -->
 </body>
 </html>
